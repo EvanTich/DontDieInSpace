@@ -118,12 +118,13 @@ exports.setup = function(io, info) {
 
         socket.on('state keys', keys => {
             // server side state management
-            let mult = keys.sprint ? 3 : 1;
+            let movementComponent = userObj.components[0];
+            movementComponent.vertical = 0;
             if(keys.up) {
-                userObj.y -= 50 * dt * mult;
+                movementComponent.vertical += 1;
             }
             if(keys.down) {
-                userObj.y += 50 * dt * mult;
+                movementComponent.vertical -= 1;
             }
             if(keys.left) {
                 userObj.x -= 50 * dt * mult;
