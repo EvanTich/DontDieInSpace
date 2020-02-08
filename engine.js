@@ -87,10 +87,6 @@ class GameObject {
 	toString() { // for debugging
 		return `GameObject{x: ${Math.round(this.x)}, y: ${Math.round(this.y)}, r: ${Math.round(this.r)}, type: ${this.type}}`;
 	}
-
-	typeOf() {
-		return this.type;
-	}
 }
 
 class Component {
@@ -117,6 +113,16 @@ class Projectile extends Component {
 
 class Bounce extends Component {
 
+	collidingVelocity;
+
+	constructor(parent, rotation, speed, mass) {
+		super(parent, (dt) => {
+			this.velocity.x += this.collidingVelocity.x * mass;
+			this.velocity.y += this.collidingVelocity.y * mass; 
+		})
+
+		this.velocity = new Pos(speed * Math.cos(rotation), speed * Math.sin(rotation));	
+	}
 }
 
 class Hitbox extends Component {
@@ -135,7 +141,7 @@ class Movement extends Component {
 	vertical; // -1 to 1
 	horizontal; // -1 to 1
 
-	constructor(parent){
+	constructor(parent, rotation){
 		super(parent, (dt) => {
 			let acc = new Pos(this.vertical * Math.cos(parent.r), this.vertical * Math.sin(parent.r));
 			this.velocity.x += acc.x * dt;
@@ -173,7 +179,7 @@ class Player extends GameObject {
     constructor(x, y, r = 0, tag = '') {
 		super(x, y, 2, r, tag);
 		
-		components.push(new Movement(this));
+		components.push(new Movement(this, r));
 		this.components.push(new Hitbox(this, 12))
 		this.components.push(new Invincible(this))
     }
@@ -185,7 +191,7 @@ class Laser extends GameObject {
         super(x, y, 3, r);
         
 		components.push(new Projectile(this, r, 8));
-		this.components.push(this, 2)
+		this.components.push(new Hitbox(this, 2))
     }
 }
 
