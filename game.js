@@ -118,8 +118,20 @@ function checkCollision() {
 }
 
 function collide(object1, object2){
-    //object2.
-    //delete laser object
+    if(typeOf(object2) == 3){
+        //delete laser object
+        //push object1
+    }
+    if(typeOf(object2) == 4 && typeOf(object1) == 2){
+        //delete object1
+    }
+    if(typeOf(object1) == 4 && typeOf(object2) == 2){
+        //delete object2
+    }
+    if(typeOf(object1) == typeOf(object2)){
+        //bounce
+    }
+    
 }
 
 exports.setup = function(io, info) {
