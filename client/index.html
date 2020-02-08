@@ -8,6 +8,11 @@
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 	</head>
 	<body>
+        <div id="splash">
+            <label for="nickname">Nickname: </label>
+            <input type="text" id="nickname">
+            <input type="button" onclick="play()">Play!</input>
+        </div>
 		<div class="game">
 			<div id="topBar">
 				<div id="fps"></div> <div id="userId"></div>
@@ -21,7 +26,7 @@
 			<input id="m" autocomplete="off" maxlength="300"/><button>Send</button>
 		</form>
 		<div id="debug" style="display: none"></div>
-		<script type="module" src="client/js/game.js"></script>
-		<script src="client/js/chat.js"></script>
+		<script type="module" src="client/game.js"></script>
+		<script src="client/chat.js"></script>
 	</body>
 </html>

@@ -7,7 +7,7 @@ const GRID_SIZE = WORLD_SIZE/128
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
 
-const GameObject = require("../lib/engine.node.js").GameObject;
+const GameObject = require("./engine.js").GameObject;
 
 const SimplexNoise = require('simplex-noise');
 const simplex = new SimplexNoise(TERRAIN_SEED);
@@ -136,6 +136,27 @@ exports.setup = function(io, info) {
             
             updateData.updated[objId] = userObj;
         });
+        // Occurs when the user inputs a name on the splash
+        socket.on('ready', nickname => {
+            /* When the user inputs a nickname (splash)
+            let taken = false;  // If that nickname is taken
+            for(let player in players) {    // Cycle through all players
+                if(player.tag == nickname) {    // If one of their tags is equal to the given nick
+                    taken = true;
+                    break;  // Eh-Fish-In-See, yeah
+                }   
+            }
+            if(!taken) {    // Nickname is free
+                userObj.tag = nickname;
+                // ? addObject(userObj);
+                socket.emit('ready', userObj);
+            } else {    // Nickname isn't free
+
+            }*/
+            userObj.tag = nickname;
+            socket.emit('ready', userObj);
+        });
+        
 
         socket.on('shoot', data => {
             // shoots from current x and y with rotation r
@@ -143,7 +164,7 @@ exports.setup = function(io, info) {
             console.log(`user ${userObj.tag} shot`);
             addObject(new GameObject(userObj.x, userObj.y, userObj.r));
         });
-        
+
         socket.on('disconnect', reason => {
             console.log('user disconnected');
             updateData.removed.push(objId);
