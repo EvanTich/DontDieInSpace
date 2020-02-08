@@ -118,8 +118,23 @@ class Bounce extends Component {
 
 }
 
+class Hitbox extends Component {
+	
+	// radius
+
+	constructor(parent, radius) {
+
+		radius = radius;
+
+	}
+}
+
+
+
 class Player extends GameObject {
-    
+	
+	thrust = false;
+
     constructor(x, y, r = 0, tag = '') {
         super(x, y, 2, r, tag);
         

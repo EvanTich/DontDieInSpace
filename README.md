@@ -80,4 +80,7 @@ function drawRotated(degrees){
         - get in the middle => get smaller and die
         - radius of effect
     - go back to splash page when you die with name autofilled
+    - add grid to game map
+    - collision checking(server-side) within 9 block square of grid
+    - blast zone checker
 - references

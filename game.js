@@ -1,7 +1,8 @@
 
 const UPDATES_PER_SECOND = 30;
 const TERRAIN_SEED = 'asteroids yo';
-const WORLD_SIZE = 2048; // not sure how big things are
+const WORLD_SIZE = 4096; // not sure how big things are
+const GRID_SIZE = WORLD_SIZE/128
 
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
@@ -19,6 +20,7 @@ var updateData = {
 
 var world = {
     size: WORLD_SIZE,
+    grid: [],
     objects: {},
     static_objects: []
 };
