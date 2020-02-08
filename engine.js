@@ -153,12 +153,10 @@ class Movement extends Component {
 } 
 
 class Player extends GameObject {
-	
-
 
     constructor(x, y, r = 0, tag = '') {
-        super(x, y, 2, r, tag);
-        
+		super(x, y, 2, r, tag);
+		
         // components.push(new );
     }
 }

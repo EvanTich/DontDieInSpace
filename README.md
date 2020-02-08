@@ -42,7 +42,7 @@ Made at UGAHacks 5.
     - ships bounce off each other && asteroids bounce off each other
     - three types of ships maybe
         - ram, normal, blaster
-    - movement
+    - movement (Complete:Still needs testing)
         - w: boost forward, s: boost backward and half the rate, a: rotate left, d: rotate right
         - turbo boost: accelerate 2x as fast, 10s cooldown
         - rotation speed

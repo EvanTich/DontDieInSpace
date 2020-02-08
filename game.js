@@ -121,11 +121,25 @@ exports.setup = function(io, info) {
             let movementComponent = userObj.components[0];
             movementComponent.vertical = 0;
             movementComponent.horizontal = 0;
-            if(keys.up) {
-                movementComponent.vertical += 1;
+            tb = 1
+            if(turboCooldown > 0) {
+                turboCooldown -= dt;
+                if(turboCooldown <= 0){
+                    turboCharge = 1.5
+                }
             }
-            if(keys.down) {
-                movementComponent.vertical -= 1;
+            if(keys.turbo && turboCharge > 0) {
+                tb = 2;
+                turboCharge -= dt;
+                if(turboCharge <= 0) {
+                    turboCooldown = 5;
+                } 
+            }
+            if(keys.forward) {
+                movementComponent.vertical += 0.5 * tb;
+            }
+            if(keys.backward) {
+                movementComponent.vertical -= 0.5;
             }
             if(keys.left) {
                 movementComponent.horizontal -= 1;
