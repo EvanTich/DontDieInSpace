@@ -1,0 +1,24 @@
+{
+  "name": "ugahacks5",
+  "version": "1.0.0",
+  "description": "Space game.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvanTich/UGAHacks5.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EvanTich/UGAHacks5/issues"
+  },
+  "homepage": "https://github.com/EvanTich/UGAHacks5#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "simplex-noise": "^2.4.0",
+    "socket.io": "^2.3.0"
+  }
+}

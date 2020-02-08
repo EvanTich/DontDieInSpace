@@ -60,3 +60,4 @@ function drawRotated(degrees){
         - get in the middle => get smaller and die
         - radius of effect
     - go back to splash page when you die with name autofilled
+- references
