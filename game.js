@@ -2,7 +2,6 @@
 const UPDATES_PER_SECOND = 30;
 const TERRAIN_SEED = 'asteroids yo';
 const WORLD_SIZE = 4096; // not sure how big things are
-const GRID_SIZE = WORLD_SIZE/128
 
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
@@ -20,7 +19,6 @@ var updateData = {
 
 var world = {
     size: WORLD_SIZE,
-    grid: [],
     objects: {},
     static_objects: []
 };
@@ -94,6 +92,34 @@ function update(dt) {
 
 function getTimeMs() {
     return +new Date();
+}
+
+function checkCollision() {
+
+    for(objId in world.objects){
+        obj1 = world.objects[objId];
+        if(obj1.typeOf == 3 || (obj1.typeOf == 2 && obj1.invincible)){
+            continue;
+        }
+        for(objId2 in world.objects){
+            obj2 = world.objects[objId2]
+            if(obj1 == obj2){
+                continue;
+            }
+            hitbox1 = obj1.components[1];
+            hitbox2 = obj2.components[1];
+            if((obj1.x + hitbox1.radius >= obj2.x - hitbox2.radius || obj1.x - hitbox1.radius <= obj2.x + hitbox2.radius) 
+            && (obj1.y + hitbox1.radius >= obj2.y - hitbo2.radius || obj1.y - hitbo1.radius <= obj2.y + hitbo2.radius)){
+                collide(obj1, obj2);
+            }
+        }
+    }
+
+}
+
+function collide(object1, object2){
+    //object2.
+    //delete laser object
 }
 
 exports.setup = function(io, info) {

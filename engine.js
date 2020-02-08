@@ -87,6 +87,10 @@ class GameObject {
 	toString() { // for debugging
 		return `GameObject{x: ${Math.round(this.x)}, y: ${Math.round(this.y)}, r: ${Math.round(this.r)}, type: ${this.type}}`;
 	}
+
+	typeOf() {
+		return this.type;
+	}
 }
 
 class Component {
@@ -149,12 +153,29 @@ class Movement extends Component {
 
 } 
 
+class Invincible extends Component{
+	
+	invincible = true;
+	timer = 2;
+	constructor(parent){
+		super(parent, (dt) => {
+			timer -= dt
+			if(timer <= 0) {
+				invincible = false;
+			}
+		})
+	}
+
+}
+
 class Player extends GameObject {
 
     constructor(x, y, r = 0, tag = '') {
 		super(x, y, 2, r, tag);
 		
-        // components.push(new );
+		components.push(new Movement(this, r));
+		this.components.push(new Hitbox(this, 12))
+		this.components.push(new Invincible(this))
     }
 }
 
@@ -163,7 +184,8 @@ class Laser extends GameObject {
     constructor(x, y, r) {
         super(x, y, 3, r);
         
-        components.push(new Projectile(this, r, 8));
+		components.push(new Projectile(this, r, 8));
+		this.components.push(this, 2)
     }
 }
 
@@ -171,7 +193,8 @@ class Asteroid extends GameObject {
     constructor(x, y, r) {
         super(x, y, 4, r);
 
-        components.push(new Projectile(this, r, 1));
+		components.push(new Projectile(this, r, 1));
+		this.components.push(new Hitbox(this, 12))
     }
 }
 
