@@ -138,6 +138,7 @@ function collide(objId, objId2,){
         //bounce
         world.objects[objId].components[1]
     }   
+    
 }
 
 exports.setup = function(io, info) {
