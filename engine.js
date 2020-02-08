@@ -131,7 +131,7 @@ class Hitbox extends Component {
 
 	constructor(parent, radius) {
 
-		radius = radius;
+		this.radius = radius;
 
 	}
 }
