@@ -110,7 +110,7 @@ class Projectile extends Component {
             parent.y += velocity.y * dt;
         });
 
-        velocity = new Pos(speed * Math.cos(rotation), speed * Math.sin(rotation));
+        this.velocity = new Pos(speed * Math.cos(rotation), speed * Math.sin(rotation));
     }
 }
 
@@ -129,11 +129,23 @@ class Hitbox extends Component {
 	}
 }
 
+class Movement extends Component {
 
+	constructor(parent, rotation, speed, rotationalSpeed){
+		super(parent, (dt) => {
+			parent.x += velocity.x * dt;
+			parent.y += velocity.y * dt;
+			parent.r += rotationalSpeed * dt;
+		})
+
+		this.velocity = new Pos(speed * Math.cos(rotation), speed * Math.sin(rotation));
+	}
+
+} 
 
 class Player extends GameObject {
 	
-	thrust = false;
+	
 
     constructor(x, y, r = 0, tag = '') {
         super(x, y, 2, r, tag);
