@@ -2,7 +2,6 @@
 const UPDATES_PER_SECOND = 30;
 const TERRAIN_SEED = 'asteroids yo';
 const WORLD_SIZE = 4096; // not sure how big things are
-const GRID_SIZE = WORLD_SIZE/128
 
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
@@ -22,7 +21,6 @@ var updateData = {
 
 var world = {
     size: WORLD_SIZE,
-    grid: [],
     objects: {},
     static_objects: []
 };
@@ -100,6 +98,46 @@ function getTimeMs() {
     return +new Date();
 }
 
+function checkCollision() {
+
+    for(objId in world.objects){
+        obj1 = world.objects[objId];
+        if(obj1.typeOf == 3 || (obj1.typeOf == 2 && obj1.invincible)){
+            continue;
+        }
+        for(objId2 in world.objects){
+            obj2 = world.objects[objId2]
+            if(obj1 == obj2){
+                continue;
+            }
+            hitbox1 = obj1.components[1];
+            hitbox2 = obj2.components[1];
+            if((obj1.x + hitbox1.radius >= obj2.x - hitbox2.radius || obj1.x - hitbox1.radius <= obj2.x + hitbox2.radius) 
+            && (obj1.y + hitbox1.radius >= obj2.y - hitbo2.radius || obj1.y - hitbo1.radius <= obj2.y + hitbo2.radius)){
+                collide(obj1, obj2);
+            }
+        }
+    }
+
+}
+
+function collide(object1, object2){
+    if(typeOf(object2) == 3){
+        //delete laser object
+        //push object1
+    }
+    if(typeOf(object2) == 4 && typeOf(object1) == 2){
+        //delete object1
+    }
+    if(typeOf(object1) == 4 && typeOf(object2) == 2){
+        //delete object2
+    }
+    if(typeOf(object1) == typeOf(object2)){
+        //bounce
+    }
+    
+}
+
 exports.setup = function(io, info) {
     let lastTime, 
         currentTime, 
@@ -112,21 +150,35 @@ exports.setup = function(io, info) {
 
         socket.on('state keys', keys => {
             // server side state management
-            // let movementComponent = userObj.components[0];
-            // movementComponent.vertical = 0;
-            // movementComponent.horizontal = 0;
-            // if(keys.up) {
-            //     movementComponent.vertical += 1;
-            // }
-            // if(keys.down) {
-            //     movementComponent.vertical -= 1;
-            // }
-            // if(keys.left) {
-            //     movementComponent.horizontal -= 1;
-            // }
-            // if(keys.right) {
-            //     movementComponent.horizontal += 1;
-            // }
+            let movementComponent = userObj.components[0];
+            movementComponent.vertical = 0;
+            movementComponent.horizontal = 0;
+            tb = 1
+            if(turboCooldown > 0) {
+                turboCooldown -= dt;
+                if(turboCooldown <= 0){
+                    turboCharge = 1.5
+                }
+            }
+            if(keys.turbo && turboCharge > 0) {
+                tb = 2;
+                turboCharge -= dt;
+                if(turboCharge <= 0) {
+                    turboCooldown = 5;
+                } 
+            }
+            if(keys.forward) {
+                movementComponent.vertical += 0.5 * tb;
+            }
+            if(keys.backward) {
+                movementComponent.vertical -= 0.5;
+            }
+            if(keys.left) {
+                movementComponent.horizontal -= 1;
+            }
+            if(keys.right) {
+                movementComponent.horizontal += 1;
+            }
 
             if(keys.shoot) {
                 // shoots from current x and y with rotation r
