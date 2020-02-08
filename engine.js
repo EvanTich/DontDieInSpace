@@ -128,21 +128,30 @@ class Hitbox extends Component {
 
 class Movement extends Component {
 
-	constructor(parent, rotation, speed, rotationalSpeed){
+	vertical; // -1 to 1
+	horizontal; // -1 to 1
+
+	constructor(parent, rotation){
 		super(parent, (dt) => {
+			let acc = new Pos(this.vertical * Math.cos(parent.r), this.vertical * Math.sin(parent.r));
+			this.velocity.x += acc.x * dt;
+			this.velocity.x *= 0.95
+			this.velocity.y += acc.y * dt;
+			this.velocity.y *= 0.95
 			parent.x += velocity.x * dt;
 			parent.y += velocity.y * dt;
-			parent.r += rotationalSpeed * dt;
+
+			parent.r += this.horizontal * dt;
 		})
 
-		this.velocity = new Pos(speed * Math.cos(rotation), speed * Math.sin(rotation));
+		this.velocity = new Pos(0, 0);
 	}
 
 } 
 
 class Player extends GameObject {
 	
-	
+
 
     constructor(x, y, r = 0, tag = '') {
         super(x, y, 2, r, tag);
