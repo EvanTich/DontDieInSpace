@@ -1,0 +1,95 @@
+* { 
+	margin: 0; 
+	padding: 0; 
+	box-sizing: border-box; 
+}
+
+body {
+	display: flex;
+}
+
+#topBar {
+	position: relative;
+	top: 0px;
+	padding: 8px 8px;
+	display: flex;
+}
+
+#userId {
+	position: absolute;
+	right: 8px;
+	text-orientation: sideways-right;
+}
+
+.game {
+	width: 66%;
+	background: black;
+}
+
+.side { 
+	width: 33%;
+}
+
+.chat {
+	font: 13px Helvetica, Arial; 
+	background: whitesmoke;
+	flex: 1;
+}
+
+form { 
+	padding: 3px;
+	width: 100%;
+}
+
+form input { 
+	border: 0;
+	padding: 10px;
+	width: 90%;
+	margin-right: .5%;
+}
+
+form button { 
+	width: 9.33%;
+	background: rgb(130, 224, 255);
+	border: none;
+	padding: 10px;
+}
+
+#messages { 
+	list-style-type: none; 
+	width: 100%;
+	margin: 0; 
+	padding: 0; 
+	overflow: auto;
+	height: 512px;
+}
+
+#messages li { 
+	padding: 5px 10px; 
+	
+	/* I'm not sure which to use, so here's all of them */
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	word-break: break-all;
+	word-break: break-word;
+	hyphens: auto;
+}
+
+#messages li.privateMessage {
+	color: green !important;
+}
+
+#messages li.alertMessage {
+	color: red !important;
+}
+
+#messages li.commandMessage {
+	color: palevioletred !important;
+}
+
+#debug {
+	height: 100px;
+	overflow-y: auto;
+	position: fixed;
+	bottom: 0;
+}
