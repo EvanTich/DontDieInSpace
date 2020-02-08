@@ -27,6 +27,26 @@ function drawRotated(degrees){
 
 ```
 
+## Socket stuff
+` -> ` is from the server to the user
+` <- ` is from the user to the server
+
+### User first gets into the webpage
+` -> 'setup'` with world = {size, objects, static_objects}
+
+### User enters name and clicks "Play!"
+` <- 'ready'` with player name
+` -> 'ready'` with player object = GameObject
+
+### Gameplay
+` <- 'key state'` with keys = {forward, backwards, left, right, shoot, turbo}
+` -> 'objects initial'` with initialized = {id: object, ...}
+` -> 'objects updated'` with updated = {id: object, ...}
+` -> 'objects removed'` with removed = [id, ...]
+
+### User leaves
+` <- 'disconnect'` with reason, remove user from game data
+
 ## TODO
 - [ ] splash page in front of the game
     - top and current time leaderboard shown

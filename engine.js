@@ -115,7 +115,7 @@ class Projectile extends Component {
 }
 
 class Bounce extends Component {
-    
+
 }
 
 class Player extends GameObject {
@@ -140,9 +140,12 @@ class Asteroid extends GameObject {
     constructor(x, y, r) {
         super(x, y, 4, r);
 
-        components.push(new Projectile(this, r, 3));
+        components.push(new Projectile(this, r, 1));
     }
 }
 
 module.exports.Pos = Pos;
 module.exports.GameObject = GameObject;
+module.exports.Player = Player;
+module.exports.Laser = Laser;
+module.exports.Asteroid = Asteroid;
