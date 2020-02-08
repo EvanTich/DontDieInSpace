@@ -18,16 +18,35 @@ body {
 #splash {
     position: fixed;
     display: block;
-    width: 50%;
-    height: 50%;
-    top: 50%;
-    left: 50%;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
     right: 0;
     bottom: 0;
     background-color: rgba(0,0,0,0.5);
-    transform: translate(-50%, -50%);
     z-index: 2;
-  }
+}
+
+#splash_form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 30px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+
+.main_view {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
 
 #userId {
 	position: absolute;
@@ -36,13 +55,13 @@ body {
 }
 
 .game {
-	width: 66%;
+	/* width: 66%; */
 	background: black;
 }
 
-.side { 
+/* .side { 
 	width: 33%;
-}
+} */
 
 .chat {
 	font: 13px Helvetica, Arial; 

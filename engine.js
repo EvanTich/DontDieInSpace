@@ -131,7 +131,7 @@ class Movement extends Component {
 	vertical; // -1 to 1
 	horizontal; // -1 to 1
 
-	constructor(parent, rotation){
+	constructor(parent){
 		super(parent, (dt) => {
 			let acc = new Pos(this.vertical * Math.cos(parent.r), this.vertical * Math.sin(parent.r));
 			this.velocity.x += acc.x * dt;
@@ -156,7 +156,7 @@ class Player extends GameObject {
     constructor(x, y, r = 0, tag = '') {
         super(x, y, 2, r, tag);
         
-        // components.push(new );
+        this.components.push(new Movement(this));
     }
 }
 

@@ -7,7 +7,9 @@ const GRID_SIZE = WORLD_SIZE/128
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
 
-const GameObject = require("./engine.js").GameObject;
+const engine = require('./engine.js');
+const GameObject = engine.GameObject;
+const Player = engine.Player;
 
 const SimplexNoise = require('simplex-noise');
 const simplex = new SimplexNoise(TERRAIN_SEED);
@@ -52,11 +54,13 @@ function initWorld() {
                  0.5 * noise(nx * 2, ny * 2) +
                 0.25 * noise(nx * 4, ny * 4);
             val /= 1.75; // 1.75 == all weights summed
-            if(Math.pow(val, TERRAIN_EXP) > .85) {
+            if(Math.pow(val, TERRAIN_EXP) > .90) {
                 world.static_objects.push(new GameObject(x, y, 1))
             }
         }
     }
+
+    console.log(world.static_objects.length);
 }
 
 initWorld();
@@ -101,37 +105,33 @@ exports.setup = function(io, info) {
         currentTime, 
         dt;
     let game = io.of('/game').on('connection', socket => {
-        let userObj = new GameObject(world.size / 2, world.size / 2, 0);
-        userObj.tag = info[socket.conn.id].tag;
-        info[socket.conn.id].object = userObj;
-        
-        let objId = addObject(userObj);
-        info[socket.conn.id].objectId = objId;
-
-        players[objId] = {
-            buildTimer: 0,
-            moveTimer: 0
-        };
+        let userObj;
+        let objId;
 
         socket.emit('setup', world);
-        socket.emit('object id', { id: objId });
 
         socket.on('state keys', keys => {
             // server side state management
-            let movementComponent = userObj.components[0];
-            movementComponent.vertical = 0;
-            movementComponent.horizontal = 0;
-            if(keys.up) {
-                movementComponent.vertical += 1;
-            }
-            if(keys.down) {
-                movementComponent.vertical -= 1;
-            }
-            if(keys.left) {
-                movementComponent.horizontal -= 1;
-            }
-            if(keys.right) {
-                movementComponent.horizontal += 1;
+            // let movementComponent = userObj.components[0];
+            // movementComponent.vertical = 0;
+            // movementComponent.horizontal = 0;
+            // if(keys.up) {
+            //     movementComponent.vertical += 1;
+            // }
+            // if(keys.down) {
+            //     movementComponent.vertical -= 1;
+            // }
+            // if(keys.left) {
+            //     movementComponent.horizontal -= 1;
+            // }
+            // if(keys.right) {
+            //     movementComponent.horizontal += 1;
+            // }
+
+            if(keys.shoot) {
+                // shoots from current x and y with rotation r
+                console.log(`user ${userObj.tag} shot`);
+                addObject(new GameObject(userObj.x, userObj.y, userObj.r));
             }
             
             updateData.updated[objId] = userObj;
@@ -153,21 +153,21 @@ exports.setup = function(io, info) {
             } else {    // Nickname isn't free
 
             }*/
-            userObj.tag = nickname;
-            socket.emit('ready', userObj);
-        });
+
+            userObj = new GameObject(world.size / 2, world.size / 2, 0);
+            userObj.tag = info[socket.conn.id].tag = nickname;
+            info[socket.conn.id].object = userObj;
         
+            objId = addObject(userObj);
+            info[socket.conn.id].objectId = objId;
 
-        socket.on('shoot', data => {
-            // shoots from current x and y with rotation r
-
-            console.log(`user ${userObj.tag} shot`);
-            addObject(new GameObject(userObj.x, userObj.y, userObj.r));
+            socket.emit('ready', objId);
         });
 
         socket.on('disconnect', reason => {
             console.log('user disconnected');
-            updateData.removed.push(objId);
+            if( typeof objId !== 'undefined')
+                updateData.removed.push(objId);
         });
     });
 

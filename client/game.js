@@ -12,7 +12,7 @@ function isChatInFocus() {
 }
 
 // world state
-const world = {
+let world = {
 	size: 2048,
     objects: {},
     static_objects: [],
@@ -37,13 +37,12 @@ var renderedObjects = 0;
 var game;
 var objId;
 
-function play() {
-    game.emit('ready', nicknameInput.value);
-}
-
-// itty bitty init-y committee (that does nothing)
 function init() {
-	
+    $('#splash_form').submit( e => {
+        e.preventDefault();
+        game.emit('ready', nicknameInput.value);
+        return false;
+    });
 }
 
 // UPDATING ---------
@@ -53,7 +52,7 @@ function keys(dt) {
 		return;
 
 	// send a server update for movement
-	game.emit('state keys', ih.state);
+	game.emit('key state', ih.state);
 
 	// client side state changes
 	if(ih.state.debug) {
@@ -86,7 +85,10 @@ function debug() {
 }
 
 function drawStaticObjects(g) {
-
+    for(let obj of world.static_objects) {
+        if(obj.draw(g, ch))
+            renderedObjects++;
+    }
 }
 
 function draw(g) {
@@ -128,7 +130,8 @@ $( () => {
 	game.on('ready', id => {
 		objId = id;
 		// now we can follow the player
-		ch.followObj(world.objects[objId]);
+        ch.followObj(world.objects[objId]);
+        $('#splash')[0].style.display = 'none';
 	});
 
 	game.on('objects initial', initialized => {
@@ -153,11 +156,12 @@ $( () => {
 	});
 
 	game.on('setup', worldData => {
-		world.size = worldData.size;
-		world.static_objects = worldData.static_objects;
-		for(let obj of worldData.objects) {
-			world.static_objects = GameObject.from(obj);
-		}
+        world.size = worldData.size;
+        
+		for(let obj of worldData.static_objects) {
+			world.static_objects.push(GameObject.from(obj));
+        }
+        
 		for(let id in worldData.objects) {
 			world.objects[id] = GameObject.from(worldData.objects[id]);
 		}

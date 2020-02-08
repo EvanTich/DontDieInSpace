@@ -9,22 +9,26 @@
 	</head>
 	<body>
         <div id="splash">
-            <label for="nickname">Nickname: </label>
-            <input type="text" id="nickname">
-            <input type="button" onclick="play()">Play!</input>
+            <form id="splash_form">
+                <label for="nickname">Nickname: </label>
+                <input type="text" id="nickname"> <br>
+                <button>Play!</button>
+            </div>
         </div>
-		<div class="game">
-			<div id="topBar">
-				<div id="fps"></div> <div id="userId"></div>
-			</div>
-			<canvas id="canvas" width="512px" height="512px"></canvas>
-		</div>
-		<div class="side">
-			<ul class="chat" id="messages"></ul>
-		</div>
-		<form action="">
-			<input id="m" autocomplete="off" maxlength="300"/><button>Send</button>
-		</form>
+        <div class="main_view">
+		    <div class="game">
+		    	<div id="topBar">
+		    		<div id="fps"></div> <div id="userId"></div>
+		    	</div>
+		    	<canvas id="canvas" width="512px" height="512px"></canvas>
+		    </div>
+		    <div class="side">
+		    	<ul class="chat" id="messages"></ul>
+		    </div>
+		    <form id="chat_form" action="">
+		    	<input id="m" autocomplete="off" maxlength="300"/><button>Send</button>
+            </form>
+        </div>
 		<div id="debug" style="display: none"></div>
 		<script type="module" src="client/game.js"></script>
 		<script src="client/chat.js"></script>

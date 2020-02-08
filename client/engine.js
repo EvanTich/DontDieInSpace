@@ -3,19 +3,20 @@
 //* The parts under the hood.
 //*
 
-// init sprite map
-const spriteMap = new Image();
-spriteMap.src = './client/img/sprites.png';
-
 // {x offset, y offset, width, height}
 // probably should be an array but who cares
 const typeMap = {
 	// id: {img: image path, r: radius of hitbox from the center}
-	0: {img: 'img/path.png', r: 0}, // NOTHING
-    1: {img: 'img/path.png', r: 0}, // STAR
-    2: {img: 'img/path.png', r: 0}, // PLAYER
-    3: {img: 'img/path.png', r: 0}, // PROJECTILE
-    4: {img: 'img/path.png', r: 0} // ASTEROID
+	'-1': {img_src: '', r: 0}, // NOTHING
+    1: {img_src: 'client/imgs/star.png', r: 0}, // STAR
+    2: {img_src: 'client/imgs/ship.png', r: 6}, // PLAYER
+    3: {img_src: 'client/imgs/laser.png', r: 2}, // PROJECTILE
+    4: {img_src: 'client/imgs/rock1.png', r: 10} // ASTEROID
+}
+
+for(let i in typeMap) {
+    typeMap[i].img = new Image();
+    typeMap[i].img.src = typeMap[i].img_src;
 }
 
 // Be sure to copy to engine.node.js
@@ -53,7 +54,7 @@ export class GameObject {
 	}
 
 	static from(obj) {
-		console.log(obj);
+		// console.log(obj);
 		return new GameObject(obj.pos.x, obj.pos.y, obj.type, obj._r, obj.tag);
 	}
 
@@ -84,11 +85,11 @@ export class GameObject {
 	}
 	
 	get w() {
-		return this.type == -1 ? 16 : typeMap[this.type].w;
+		return 10;
 	}
 	
 	get h() {
-		return this.type == -1 ? 16 : typeMap[this.type].h;
+		return 10;
 	}
 	
 	get r() { return this._r; }
@@ -103,15 +104,15 @@ export class GameObject {
 		
 		g.save();
 		g.translate((this.x - state.cx) * state.cz, (this.y - state.cy) * state.cz);
-		g.rotate(this.r * Math.PI / 180);
+		//g.rotate(this.r * Math.PI / 180);
 		if(this.type == -1) {
 			g.fillRect(-w / 2, -h / 2, w, h);
 		} else {
-			let t = typeMap[this.type];
-			g.drawImage(spriteMap, 
-				t.x * 16, t.y * 16, t.w, t.h,
-				Math.round(-w / 2), Math.round(-h / 2), w, h
-			);
+            g.fillRect(-w / 2, -h / 2, w, h);
+			// let t = typeMap[1];
+			// g.drawImage(t.img, 
+			// 	Math.round(-w / 2), Math.round(-h / 2), w, h
+			// );
 		}
 
 		if(this.tag) {
@@ -305,7 +306,7 @@ export class CanvasHandler {
 
 	get cx() { return this.follow.x - this.cs / 2; } // camera x (in the top right corner)
 	get cy() { return this.follow.y - this.cs / 2; } // camera y ^
-	get cmax() { return 512; } // max camera size
+	get cmax() { return 256; } // max camera size
 	get cs() { return this.cmax / this.cz; } // camera size
 	get cz() { return 2 * this.zoom; } // camera zoom
 
