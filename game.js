@@ -117,21 +117,27 @@ function checkCollision() {
 
 }
 
-function collide(object1, object2){
-    if(typeOf(object2) == 3){
-        //delete laser object
+function collide(objId, objId2,){
+    object1 = world.objects[objId];
+    object2 = world.objects[objId2];
+    if(object2.type == 3){
+        //laser hit something
         //push object1
+        updateData.removed.push(objId2);
+        
     }
-    if(typeOf(object2) == 4 && typeOf(object1) == 2){
-        //delete object1
+    if(object2.type == 4 && object1.type == 2){
+        //player crash with asteroid
+        updateData.removed.push(objId);
     }
-    if(typeOf(object1) == 4 && typeOf(object2) == 2){
-        //delete object2
+    if(object1.type == 4 && object2.type == 2){
+        //player crash with asteroid
+        updateData.removed.push(objId2);
     }
-    if(typeOf(object1) == typeOf(object2)){
+    if(object1.type == object2.type){
         //bounce
-    }
-    
+        world.objects[objId].components[1]
+    }   
 }
 
 exports.setup = function(io, info) {
