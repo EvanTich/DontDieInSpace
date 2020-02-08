@@ -23,7 +23,6 @@ class GameObject {
 	// pos; // Pos {x, y}
 	// type;
 	// _r;
-	// flipped;
     
     // components // array of components
 
@@ -31,7 +30,6 @@ class GameObject {
 		this.pos = new Pos(x, y); // center
 		this.type = type;
 		this._r = r; // degrees
-		// this.flipped = false;
 		if(tag) {
 			this.tag = tag;
 		}
@@ -48,7 +46,6 @@ class GameObject {
 		this.pos.y = obj.y;
 		this.type = obj.type;
 		this._r = obj._r; // degrees
-		// this.flipped = obj.flipped;
 		if(obj.tag) {
 			this.tag = obj.tag;
 		}
