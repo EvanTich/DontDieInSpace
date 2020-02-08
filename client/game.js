@@ -1,4 +1,4 @@
-import { GameObject, Engine } from "../../lib/engine.js";
+import { GameObject, Engine } from "./engine.js";
 import { inputConfig } from "./config.js";
 
 //*
@@ -11,11 +11,11 @@ function isChatInFocus() {
 	return chatBox === document.activeElement;
 }
 
-// TODO make proper class
 // world state
 const world = {
 	size: 2048,
-	objects: {},
+    objects: {},
+    static_objects: [],
 	rendered: 0,
 
 	toString() { // for debugging
@@ -28,12 +28,18 @@ const world = {
 const fpsDiv = $("#fps")[0];
 // end fps
 
+const nicknameInput = $('#nickname')[0];
+
 var debugMode = false;
 const debugDiv = $("#debug")[0];
 var renderedObjects = 0;
 
 var game;
 var objId;
+
+function play() {
+    game.emit('ready', nicknameInput.value);
+}
 
 // itty bitty init-y committee (that does nothing)
 function init() {
@@ -79,12 +85,16 @@ function debug() {
 	debugDiv.innerHTML = ch + "<br/>" + ih + "<br/>" + world + "<br/>" + JSON.stringify(world.objects);
 }
 
+function drawStaticObjects(g) {
+
+}
+
 function draw(g) {
 	renderedObjects = 0;
 	g.fillStyle = 'black';
 	g.fillRect(0, 0, ch.canvas.width, ch.canvas.height); 
 
-	drawTerrain(g);
+	drawStaticObjects(g);
 	
 	g.fillStyle = 'white';
 	for(let objKey in world.objects) {
@@ -111,46 +121,13 @@ $( () => {
 	if(typeof io === 'undefined') {
 		alert('Socket IO not found on the server. Something is wrong!');
 		return;
-	}
-
-	//var id = 5000;
-	ch.setClickHandler( e => {
-		e.preventDefault();
-		// change x, y to world coordinates from screen coords
-		let pos = ch.getMouseTilePos();
-		let type = -1; // TODO: add chooser
-
-		console.log(pos);
-		//world.objects[id++] = new GameObject(pos.x * 16, pos.y * 16, type);
-		game.emit('create object', new GameObject(pos.x, pos.y, type));
-	});
-
-	ch.setRightClickHandler( e => {
-		e.preventDefault();
-
-		let pos = ch.getMouseWorldPos();
-
-		let id = -1;
-		for(let objId in world.objects) {
-			let obj = world.objects[objId];
-			if(pos.x > obj.x - obj.w / 2  && pos.x < obj.x + obj.w / 2 &&
-				pos.y > obj.y - obj.h / 2 && pos.y < obj.y + obj.h / 2) {
-				id = objId;
-			}
-		}
-
-		if(id != -1) {
-			game.emit('delete object', { id });
-		}
-	});
+    }
 
 	game = io.connect('/game');
 
-	game.on('object id', d => {
-		objId = d.id;
+	game.on('ready', id => {
+		objId = id;
 		// now we can follow the player
-		console.log(world.objects[objId]);
-		// FIXME: not following the player for some reason
 		ch.followObj(world.objects[objId]);
 	});
 
@@ -177,7 +154,10 @@ $( () => {
 
 	game.on('setup', worldData => {
 		world.size = worldData.size;
-		world.terrain = worldData.terrain;
+		world.static_objects = worldData.static_objects;
+		for(let obj of worldData.objects) {
+			world.static_objects = GameObject.from(obj);
+		}
 		for(let id in worldData.objects) {
 			world.objects[id] = GameObject.from(worldData.objects[id]);
 		}
@@ -187,7 +167,11 @@ $( () => {
 			console.log(world.objects[objId]);
 			ch.followObj(world.objects[objId]);
 		}
-	});
+    });
+    
+    game.on('leaderboard', leaderboard => {
+
+    });
 
 
 	engine.start();

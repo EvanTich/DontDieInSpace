@@ -6,7 +6,7 @@ const WORLD_SIZE = 2048; // not sure how big things are
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
 
-const GameObject = require("../lib/engine.node.js").GameObject;
+const GameObject = require("./engine.js").GameObject;
 
 const SimplexNoise = require('simplex-noise');
 const simplex = new SimplexNoise(TERRAIN_SEED);

@@ -69,8 +69,8 @@ const general = io.on('connection', socket => {
 });
 
 // setup chat and game server
-const chat = require('chat.js').setup(io, info);
-const game = require('game.js').setup(io, info);
+const chat = require('./chat.js').setup(io, info);
+const game = require('./game.js').setup(io, info);
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/client/index.html');

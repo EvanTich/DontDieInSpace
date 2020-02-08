@@ -36,7 +36,7 @@ class GameObject {
 			this.tag = tag;
 		}
         
-        components = [];
+        this.components = [];
 	}
 
 	static from(obj) {
