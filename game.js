@@ -120,6 +120,7 @@ exports.setup = function(io, info) {
             // server side state management
             let movementComponent = userObj.components[0];
             movementComponent.vertical = 0;
+            movementComponent.horizontal = 0;
             if(keys.up) {
                 movementComponent.vertical += 1;
             }
@@ -127,12 +128,10 @@ exports.setup = function(io, info) {
                 movementComponent.vertical -= 1;
             }
             if(keys.left) {
-                userObj.x -= 50 * dt * mult;
-                userObj.flipped = false;
+                movementComponent.horizontal -= 1;
             }
             if(keys.right) {
-                userObj.x += 50 * dt * mult;
-                userObj.flipped = true;
+                movementComponent.horizontal += 1;
             }
             
             updateData.updated[objId] = userObj;
