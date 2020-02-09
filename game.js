@@ -99,17 +99,17 @@ function getTimeMs() {
 function checkCollision() {
 
     for(objId in world.objects){
-        obj1 = world.objects[objId];
+        let obj1 = world.objects[objId];
         if(obj1.type == 3 || (obj1.type == 2 && obj1.components[2].invincible)){
             continue;
         }
         for(objId2 in world.objects){
-            obj2 = world.objects[objId2]
+            let obj2 = world.objects[objId2]
             if(obj1 == obj2){
                 continue;
             }
-            hitbox1 = obj1.components[1];
-            hitbox2 = obj2.components[1];
+            let hitbox1 = obj1.components[1];
+            let hitbox2 = obj2.components[1];
             if((obj1.x + hitbox1.radius >= obj2.x - hitbox2.radius || obj1.x - hitbox1.radius <= obj2.x + hitbox2.radius) 
             && (obj1.y + hitbox1.radius >= obj2.y - hitbo2.radius || obj1.y - hitbo1.radius <= obj2.y + hitbo2.radius)){
                 collide(obj1, obj2);
@@ -119,20 +119,31 @@ function checkCollision() {
 
 }
 
-function collide(object1, object2){
-    if(typeOf(object2) == 3){
-        //delete laser object
+function collide(objId, objId2,){
+    let object1 = world.objects[objId];
+    let object2 = world.objects[objId2];
+    if(object2.type == 3){
+        //laser hit something
         //push object1
+        updateData.removed.push(objId2);
+        
     }
-    if(typeOf(object2) == 4 && typeOf(object1) == 2){
-        //delete object1
+    if(object2.type == 4 && object1.type == 2){
+        //player crash with asteroid
+        updateData.removed.push(objId);
     }
-    if(typeOf(object1) == 4 && typeOf(object2) == 2){
-        //delete object2
+    if(object1.type == 4 && object2.type == 2){
+        //player crash with asteroid
+        updateData.removed.push(objId2);
     }
-    if(typeOf(object1) == typeOf(object2)){
+    if(object1.type == object2.type){
         //bounce
-    }
+        world.objects[objId].components[1]
+        bounce(objId,objId2)
+    }   
+}
+
+function bounce(objId, objId2){
     
 }
 
@@ -157,7 +168,9 @@ exports.setup = function(io, info) {
             let movementComponent = userObj.components[0];
             movementComponent.vertical = 0;
             movementComponent.horizontal = 0;
-            tb = 1
+            let tb = 1
+            let turboCooldown = userObj.turboCooldown;
+            let turboCharge = userObj.turboCharge;
             if(turboCooldown > 0) {
                 turboCooldown -= dt;
                 if(turboCooldown <= 0){

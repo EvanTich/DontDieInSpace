@@ -104,15 +104,15 @@ class Projectile extends Component {
 
 class Bounce extends Component {
 
-	collidingVelocity;
+	collidingVelocity = new Pos(0,0);
+	velocity = new Pos(0,0);
 
-	constructor(parent, rotation, speed, mass) {
+	constructor(parent, rotation, mass) {
 		super(parent, (dt) => {
 			this.velocity.x += this.collidingVelocity.x * mass;
 			this.velocity.y += this.collidingVelocity.y * mass; 
 		})
-
-		this.velocity = new Pos(speed * Math.cos(rotation), speed * Math.sin(rotation));	
+	
 	}
 }
 
@@ -122,8 +122,8 @@ class Hitbox extends Component {
 
 	constructor(parent, radius) {
         super(parent);
+        
 		this.radius = radius;
-
 	}
 }
 
@@ -167,11 +167,14 @@ class Invincible extends Component{
 
 class Player extends GameObject {
 
+	turboCharge = 1.5;
+	turboCooldown = 5;
     constructor(x, y, r = 0, tag = '') {
 		super(x, y, 2, r, tag);
 		
 		this.components.push(new Movement(this));
 		this.components.push(new Hitbox(this, 12))
+		this.components.push(new Bounce(this, r, 1))
 		this.components.push(new Invincible(this))
     }
 }
@@ -192,6 +195,7 @@ class Asteroid extends GameObject {
 
 		this.components.push(new Projectile(this, r, 1));
 		this.components.push(new Hitbox(this, 12))
+		this.components.push(new Bounce(this, r, 0.5))
     }
 }
 
