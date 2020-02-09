@@ -137,7 +137,11 @@ function collide(objId, objId2,){
     if(object1.type == object2.type){
         //bounce
         world.objects[objId].components[1]
+        bounce(objId,objId2)
     }   
+}
+
+function bounce(objId, objId2){
     
 }
 
