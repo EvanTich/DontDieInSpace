@@ -6,11 +6,12 @@ const WORLD_SIZE = 4096; // not sure how big things are
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
 
-const MAX_ASTEROIDS = 50;
+const MAX_ASTEROIDS = 10;
 const Engine = require("./engine.js");
 const GameObject = Engine.GameObject;
 const Player = Engine.Player;
 const Laser = Engine.Laser;
+const Asteroid = Engine.Asteroid;
 
 const SimplexNoise = require('simplex-noise');
 const simplex = new SimplexNoise(TERRAIN_SEED);
@@ -30,7 +31,7 @@ var world = {
 var players = {};
 var lastId = 0;
 
-var astroidCount = 0;
+var asteroidCount = 0;
 
 function noise(x, y) {
     return simplex.noise2D(x, y) / 2 + 0.5;
@@ -151,12 +152,14 @@ function collide(objId, objId2,){
     if(object1.type == object2.type){
         console.log('player collisions');
         //bounce
-        world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
-        world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
-        world.objects[objId2].components[2].collidingVelocity.x = world.objects[objId].components[0].velocity.x;
-        world.objects[objId2].components[2].collidingVelocity.y = world.objects[objId].components[0].velocity.y;
-        world.objects[objId2].components[2].mass2 = world.objects[objId].components[2].mass;
+        if(object1.type == 2){
+            world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
+            world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
+            world.objects[objId2].components[2].collidingVelocity.x = world.objects[objId].components[0].velocity.x;
+            world.objects[objId2].components[2].collidingVelocity.y = world.objects[objId].components[0].velocity.y;
+            world.objects[objId2].components[2].mass2 = world.objects[objId].components[2].mass;
         //do components[2] bounce stuff for both objects
+        }
     }   
 }
 
