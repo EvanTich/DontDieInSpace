@@ -105,18 +105,23 @@ class Projectile extends Component {
 class Bounce extends Component {
 
 	constructor(parent, mass1) {
-		super(parent);
+        super(parent);
+        
+        this.mass = mass1;
         
         this.bounce = (collidingVelocity, mass2) => {
             let velocity = parent.components[0].velocity;
 
-			let phi = Math.atan((collidingVelocity.y - velocity.y) / (collidingVelocity.x - velocity.x))
-			let theta1 = Math.asin(velocity.y / Math.abs(velocity.x))
-			let theta2 = Math.asin(collidingVelocity.y / Math.abs(collidingVelocity.x))
-			let mag1 = Math.sqrt(Math.pow(velocity.x,2) + Math.pow(velocity.y,2))
-			let mag2 = Math.sqrt(Math.pow(collidingVelocity.x,2) + Math.pow(collidingVelocity.y,2))
-			velocity.x = ((((mag1 * Math.cos(theta1 - phi) * (mass1 - mass2)) + (2 * mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + mass2)) * Math.cos(phi) + (mag1 * Math.sin(theta1 - phi) * Math.cos(phi + (Math.PI / 2))))
-			velocity.y = ((((mag1 * Math.cos(theta1 - phi) * (mass1 - mass2)) + (2 * mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + mass2)) * Math.sin(phi) + (mag1 * Math.sin(theta1 - phi) * Math.sin(phi + (Math.PI / 2))))
+            // console.log(`collidingVelocity: ${JSON.stringify(collidingVelocity)}, \nmass2: ${mass2}, \nvelocity: ${JSON.stringify(velocity)}`);
+
+			let phi = Math.atan2(collidingVelocity.y - velocity.y, collidingVelocity.x - velocity.x);
+			let theta1 = Math.asinh(velocity.y / Math.abs(velocity.x));
+			let theta2 = Math.asinh(collidingVelocity.y / Math.abs(collidingVelocity.x));
+			let mag1 = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+			let mag2 = Math.sqrt(collidingVelocity.x * collidingVelocity.x + collidingVelocity.y * collidingVelocity.y);
+			velocity.x = (mag1 * Math.cos(theta1 - phi) * (mass1 - mass2) + 2 * mass2 * mag2 * Math.cos(theta2 - phi)) / (mass1 + mass2) * Math.cos(phi) + mag1 * Math.sin(theta1 - phi) * Math.cos(phi + Math.PI / 2);
+			velocity.y = (mag1 * Math.cos(theta1 - phi) * (mass1 - mass2) + 2 * mass2 * mag2 * Math.cos(theta2 - phi)) / (mass1 + mass2) * Math.sin(phi) + mag1 * Math.sin(theta1 - phi) * Math.sin(phi + Math.PI / 2);
+            // console.log(`velocity: ${JSON.stringify(velocity)}, \nphi: ${phi}, \nt1: ${theta1}, \nt2: ${theta2}, \nmag1: ${mag1}, \nmag2: ${mag2}`);
         }
 	}
 }
@@ -146,7 +151,7 @@ class Movement extends Component {
 			parent.x += this.velocity.x * dt * 30;
 			parent.y += this.velocity.y * dt * 30;
 
-			parent.r += parent.horizontal * dt;
+			parent.r += 3 * parent.horizontal * dt;
 		});
 
 		this.velocity = new Pos(0, 0);
@@ -204,7 +209,7 @@ class Player extends GameObject {
 
 class Laser extends GameObject {
 	
-	shooterId;
+    shooterId;
 
     constructor(x, y, r) {
         super(x, y, 3, r);
@@ -220,7 +225,7 @@ class Asteroid extends GameObject {
         super(x, y, 4, r);
 
 		this.components.push(new Projectile(this, r, Math.random() * 5));
-		this.components.push(new Hitbox(this, 12))
+		this.components.push(new Hitbox(this, 8))
 		this.components.push(new Bounce(this, 4))
     }
 }

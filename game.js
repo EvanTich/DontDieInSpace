@@ -8,6 +8,7 @@ const TERRAIN_EXP = 2; // mountains higher, valleys lower
 
 const MAX_ASTEROIDS = 50;
 const Engine = require("./engine.js");
+const Pos = Engine.Pos;
 const GameObject = Engine.GameObject;
 const Player = Engine.Player;
 const Laser = Engine.Laser;
@@ -127,49 +128,36 @@ function checkCollision() {
 }
 
 function collide(objId, objId2){
-    let object1 = world.objects[objId];
-    let object2 = world.objects[objId2];
-    if(object2.type == 3){
+    let obj1 = world.objects[objId];
+    let obj2 = world.objects[objId2];
+    if(obj2.type == 3){
         //laser hit something
         //push object1
         //use bounce with laser data before deleting the laser
-        if(world.objects[objId2].shooterId == objId){
+        if(obj2.shooterId == objId){
             return;
         }else{
             console.log('laser collision');
-            world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
-            world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
-            world.objects[objId].components[2].mass2 = world.objects[objId2].components[2].mass;
+            obj1.components[2].bounce(obj2.components[0].velocity, 1)
             updateData.removed.push(objId2);
         }
     }
-    if(object2.type == 4 && object1.type == 2){
+    if(obj2.type == 4 && obj1.type == 2){
         //player crash with asteroid
         updateData.removed.push(objId);
     }
-    if(object1.type == 4 && object2.type == 2){
+    if(obj1.type == 4 && obj2.type == 2){
         //player crash with asteroid
         updateData.removed.push(objId2);
     }
-    if(object1.type == object2.type){
-        console.log('bounce collisions');
+    if(obj1.type == obj2.type){
+        console.log('bounce collision');
         //bounce
-        // if(object1.type == 2){
-            // world.objects[objId].components[0].velocity.x = -world.objects[objId].components[0].velocity.x;
-            // world.objects[objId].components[0].velocity.y = -world.objects[objId].components[0].velocity.y;
-
-            // world.objects[objId2].components[0].velocity.x = -world.objects[objId2].components[0].velocity.x;
-            // world.objects[objId2].components[0].velocity.y = -world.objects[objId2].components[0].velocity.y;
-            world.objects[objId].components[2].bounce(
-                world.objects[objId2].components[0].velocity,
-                world.objects[objId2].components[2].mass
-            );
-            world.objects[objId2].components[2].bounce(
-                world.objects[objId].components[0].velocity,
-                world.objects[objId].components[2].mass
-            );
-        //do components[2] bounce stuff for both objects
-        // }
+        let vel1 = new Pos(obj1.components[0].velocity.x, obj1.components[0].velocity.y),
+            vel2 = new Pos(world.objects[objId2].components[0].velocity.x, world.objects[objId2].components[0].velocity.y);
+            
+        obj1.components[2].bounce(vel2, obj2.components[2].mass);
+        obj2.components[2].bounce(vel1, obj1.components[2].mass);
     }   
 }
 
@@ -188,15 +176,15 @@ function asteroidSpawn(){
     if (Math.random() < .5){
         let x = (WORLD_SIZE + 20) * (Math.random() < .5 ? -1 : 1);
         let y = WORLD_SIZE * Math.random();
-        let vectorAreaX = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
-        let vectorAreaY = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
+        let vectorAreaX = WORLD_SIZE/2 + ((Math.random() - .5) * WORLD_SIZE / 2);
+        let vectorAreaY = WORLD_SIZE/2 + ((Math.random() - .5) * WORLD_SIZE / 2);
         let rotation = Math.atan2(vectorAreaY-y, vectorAreaX-x);
         addObject(new Asteroid(x, y, rotation));
     } else {
         let y = (WORLD_SIZE + 20) * (Math.random() < .5 ? -1 : 1);
         let x = WORLD_SIZE * Math.random();
-        let vectorAreaX = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
-        let vectorAreaY = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
+        let vectorAreaX = WORLD_SIZE/2 + ((Math.random() - .5) * WORLD_SIZE / 2);
+        let vectorAreaY = WORLD_SIZE/2 + ((Math.random() - .5) * WORLD_SIZE / 2);
         let rotation = Math.atan2(vectorAreaY-y, vectorAreaX-x);
         addObject(new Asteroid(x, y, rotation));
     }
