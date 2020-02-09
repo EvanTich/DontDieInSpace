@@ -97,8 +97,15 @@ function drawStaticObjects(g) {
 
     for(let i = -10; i <= 10; i++) {
         let x = (i * world.size / 10 - ch.cx) * ch.cz,
-            y = (i * world.size / 10 - ch.cy) * ch.cz;
-        g.strokeStyle = 'gray';
+			y = (i * world.size / 10 - ch.cy) * ch.cz;
+		if(i == -10 || i == 10) {
+			g.strokeStyle = 'red';
+			g.lineWidth = 3;
+		} else {
+			g.strokeStyle = 'gray';
+			g.lineWidth = 1;
+		}
+        
         g.beginPath();
         if(x >= 0 && x < ch.canvas.width) {
             g.moveTo(x, 0);
