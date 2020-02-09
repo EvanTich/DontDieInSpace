@@ -113,7 +113,7 @@ class Bounce extends Component {
 			let phi = Math.atan((this.collidingVelocity.y - this.velocity.y) / (this.collidingVelocity.x - this.velocity.x))
 			let theta1 = Math.asin(this.velocity.y / Math.abs(this.velocity.x))
 			let theta2 = Math.asin(this.collidingVelocity.y / Math.abs(this.collidingVelocity.x))
-			let mag1 = Math.sqrt(Math.pow(this.velocity.x,2) + Math.pow(this.veloctiy.y,2))
+			let mag1 = Math.sqrt(Math.pow(this.velocity.x,2) + Math.pow(this.velocity.y,2))
 			let mag2 = Math.sqrt(Math.pow(this.collidingVelocity.x,2) + Math.pow(this.collidingVelocity.y,2))
 			this.velocity.x = ((((mag * Math.cos(theta1 - phi) * (mass1 - this.mass2)) + (2 * this.mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + this.mass2)) * Math.cos(phi) + (mag1 * Math.sin(theta1 - phi) * Math.cos(phi + (Math.PI / 2))))
 			this.velocity.y = ((((mag * Math.cos(theta1 - phi) * (mass1 - this.mass2)) + (2 * this.mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + this.mass2)) * Math.sin(phi) + (mag1 * Math.sin(theta1 - phi) * Math.sin(phi + (Math.PI / 2))))
