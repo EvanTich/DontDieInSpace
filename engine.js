@@ -145,9 +145,9 @@ class Movement extends Component {
 		super(parent, (dt) => {
 			let acc = new Pos(parent.vertical * Math.cos(parent.r), parent.vertical * Math.sin(parent.r));
             this.velocity.x += acc.x * dt * 30;
-			this.velocity.x *= 0.95
+			this.velocity.x *= 0.98
 			this.velocity.y += acc.y * dt * 30;
-			this.velocity.y *= 0.95
+			this.velocity.y *= 0.98
 			parent.x += this.velocity.x * dt * 30;
 			parent.y += this.velocity.y * dt * 30;
 
