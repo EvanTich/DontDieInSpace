@@ -53,8 +53,9 @@ function initWorld() {
                  0.5 * noise(nx * 2, ny * 2) +
                 0.25 * noise(nx * 4, ny * 4);
             val /= 1.75; // 1.75 == all weights summed
-            if(Math.pow(val, TERRAIN_EXP) > .85) {
-                world.static_objects.push(new GameObject(x, y, 1))
+            if(Math.pow(val, TERRAIN_EXP) > .8) {
+                let rand = 5+Math.floor((Math.random()*10) % 3);
+                world.static_objects.push(new GameObject(x, y, rand));
             }
         }
     }
