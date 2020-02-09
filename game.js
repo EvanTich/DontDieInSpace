@@ -136,7 +136,7 @@ function collide(objId, objId2,){
     }
     if(object1.type == object2.type){
         //bounce
-        world.objects[objId].components[1]
+        world.objects[objId].components[2].collidingVelocity.x = 
         //do components[2] bounce stuff for both objects
     }   
 }
