@@ -190,6 +190,8 @@ function asteroidSpawn(){
     }
 }
 
+
+
 exports.setup = function(io, info) {
     let lastTime, 
         currentTime, 

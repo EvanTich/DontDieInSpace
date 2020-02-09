@@ -95,20 +95,21 @@ function drawStaticObjects(g) {
             renderedObjects++;
     }
 
-    // for(let i = 0; i < 10; i++) {
-    //     let x = (i * world.size / 10 - ch.cx) * ch.cz,
-    //         y = (i * world.size / 10 - ch.cy) * ch.cz;
-    //     g.strokeStyle = 'gray';
-    //     if(x >= 0 && x < ch.canvas.width) {
-    //         g.moveTo(x, 0);
-    //         g.lineTo(x, ch.canvas.height);
-    //     }
-    //     if(y >= 0 && y < ch.canvas.height) {
-    //         g.moveTo(0, y);
-    //         g.lineTo(ch.canvas.width, y);
-    //     }
-    //     g.stroke();
-    // }
+    for(let i = -10; i <= 10; i++) {
+        let x = (i * world.size / 10 - ch.cx) * ch.cz,
+            y = (i * world.size / 10 - ch.cy) * ch.cz;
+        g.strokeStyle = 'gray';
+        g.beginPath();
+        if(x >= 0 && x < ch.canvas.width) {
+            g.moveTo(x, 0);
+            g.lineTo(x, ch.canvas.height);
+        }
+        if(y >= 0 && y < ch.canvas.height) {
+            g.moveTo(0, y);
+            g.lineTo(ch.canvas.width, y);
+        }
+        g.stroke();
+    }
 }
 
 function draw(g) {
@@ -194,6 +195,10 @@ $( () => {
 		if(typeof objId !== 'undefined') {
 			ch.followObj(world.objects[objId]);
 		}
+    });
+
+    game.on('death', () => {
+
     });
     
     game.on('leaderboard', leaderboard => {

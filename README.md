@@ -66,15 +66,15 @@ Made at UGAHacks 5.
 
 ### Actual TODO
 - [ ] leaderboard
-- [ ] collision
-    - [ ] bouncing
-- [ ] set laser to not collide with parent
+- [x] collision
+    - [x] bouncing
+- [x] set laser to not collide with parent
 - [ ] drawing death zone on client, if statements on server
 - [x] player timers, like boost and lasers
-- [ ] asteroids spawning
-- [ ] up rotation velocity
+- [x] asteroids spawning
+- [x] up rotation velocity
 - [ ] cap max velocity on ships
-- [ ] make lasers faster?
+- [x] make lasers faster?
 - [x] randomize stars
 - [ ] camera border?
 - [ ] death screen
