@@ -125,8 +125,8 @@ function collide(objId, objId2,){
     if(object2.type == 3){
         //laser hit something
         //push object1
+        //use bounce with laser data before deleting the laser
         updateData.removed.push(objId2);
-        
     }
     if(object2.type == 4 && object1.type == 2){
         //player crash with asteroid
