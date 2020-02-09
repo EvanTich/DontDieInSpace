@@ -90,7 +90,7 @@ function update(dt) {
         updateData.updated[objId] = obj;
     }
 
-    laserCleanup();
+    cleanup();
     checkCollision();
     if(asteroidCount < MAX_ASTEROIDS){
         asteroidSpawn();
@@ -161,12 +161,13 @@ function collide(objId, objId2){
     }   
 }
 
-function laserCleanup(){
+function cleanup(){
     for(let objId in world.objects){
-        if(world.objects[objId].type != 3) {
-            continue;
-        }
-        else if(!world.objects[objId].components[2].alive){
+        if(world.objects[objId].type == 2 || world.objects[objId].type == 4) {
+            if(world.objects[objId].x > WORLD_SIZE || world.objects[objId].x < -WORLD_SIZE || world.objects[objId].y > WORLD_SIZE || world.objects[objId].x < -WORLD_SIZE){
+                updateData.removed.push(objId);
+            }
+        }else if(world.objects[objId].type == 3 && !world.objects[objId].components[2].alive){
             updateData.removed.push(objId);
         }
     }
@@ -176,15 +177,15 @@ function asteroidSpawn(){
     if (Math.random() < .5){
         let x = (WORLD_SIZE + 20) * (Math.random() < .5 ? -1 : 1);
         let y = WORLD_SIZE * Math.random();
-        let vectorAreaX = WORLD_SIZE/2 + ((Math.random() - .5) * WORLD_SIZE / 2);
-        let vectorAreaY = WORLD_SIZE/2 + ((Math.random() - .5) * WORLD_SIZE / 2);
+        let vectorAreaX = (Math.random() - .5) * WORLD_SIZE / 2;
+        let vectorAreaY = (Math.random() - .5) * WORLD_SIZE / 2;
         let rotation = Math.atan2(vectorAreaY-y, vectorAreaX-x);
         addObject(new Asteroid(x, y, rotation));
     } else {
         let y = (WORLD_SIZE + 20) * (Math.random() < .5 ? -1 : 1);
         let x = WORLD_SIZE * Math.random();
-        let vectorAreaX = WORLD_SIZE/2 + ((Math.random() - .5) * WORLD_SIZE / 2);
-        let vectorAreaY = WORLD_SIZE/2 + ((Math.random() - .5) * WORLD_SIZE / 2);
+        let vectorAreaX = (Math.random() - .5) * WORLD_SIZE / 2;
+        let vectorAreaY = (Math.random() - .5) * WORLD_SIZE / 2;
         let rotation = Math.atan2(vectorAreaY-y, vectorAreaX-x);
         addObject(new Asteroid(x, y, rotation));
     }
@@ -277,7 +278,7 @@ exports.setup = function(io, info) {
             if(typeof userObj !== 'undefined')
                 return;
 
-            userObj = new Player(world.size / 2, world.size / 2, 0);
+            userObj = new Player((Math.random() - .5) * WORLD_SIZE, (Math.random() - .5) * WORLD_SIZE, 0);
             userObj.tag = info[socket.conn.id].nickname = nickname;
             info[socket.conn.id].object = userObj;
             
