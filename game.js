@@ -98,7 +98,7 @@ function checkCollision() {
 
     for(objId in world.objects){
         let obj1 = world.objects[objId];
-        if(obj1.type == 3 || (obj1.type == 2 && obj1.components[2].invincible)){
+        if(obj1.type == 3 || (obj1.type == 2 && obj1.components[3].invincible)){
             continue;
         }
         for(objId2 in world.objects){
