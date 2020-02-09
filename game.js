@@ -6,10 +6,12 @@ const WORLD_SIZE = 1024; // not sure how big things are
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
 
+const MAX_ASTEROIDS = 0;
 const Engine = require("./engine.js");
 const GameObject = Engine.GameObject;
 const Player = Engine.Player;
 const Laser = Engine.Laser;
+const Asteroid = Engine.Asteroid;
 
 const SimplexNoise = require('simplex-noise');
 const simplex = new SimplexNoise(TERRAIN_SEED);
@@ -27,6 +29,8 @@ var world = {
 };
 
 var lastId = 0;
+
+var asteroidCount = 0;
 
 function noise(x, y) {
     return simplex.noise2D(x, y) / 2 + 0.5;
@@ -78,6 +82,22 @@ function update(dt) {
 
     laserCleanup();
     checkCollision();
+    if(asteroidCount < MAX_ASTEROIDS){
+        asteroidSpawn();
+        asteroidCount++;
+    }
+    // decrement player timers
+    for(let player in players) {
+        let timers = players[player];
+        for(let timer in timers) {
+            if(timers[timer] > 0) {
+                timers[timer] -= dt;
+                if(timers[timer] < 0) {
+                    timers[timer] = 0;
+                }
+            }
+        }
+    }
 }
 
 function getTimeMs() {
@@ -104,7 +124,6 @@ function checkCollision() {
             }
         }
     }
-
 }
 
 function collide(objId, objId2,){
@@ -114,11 +133,15 @@ function collide(objId, objId2,){
         //laser hit something
         //push object1
         //use bounce with laser data before deleting the laser
-        console.log('laser collision');
-        world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
-        world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
-        world.objects[objId].components[2].mass2 = world.objects[objId2].components[2].mass;
-        updateData.removed.push(objId2);
+        if(world.objects[objId2].shooterId == objId){
+            return;
+        }else{
+            console.log('laser collision');
+            world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
+            world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
+            world.objects[objId].components[2].mass2 = world.objects[objId2].components[2].mass;
+            updateData.removed.push(objId2);
+        }
     }
     if(object2.type == 4 && object1.type == 2){
         //player crash with asteroid
@@ -131,12 +154,14 @@ function collide(objId, objId2,){
     if(object1.type == object2.type){
         console.log('player collisions');
         //bounce
-        world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
-        world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
-        world.objects[objId2].components[2].collidingVelocity.x = world.objects[objId].components[0].velocity.x;
-        world.objects[objId2].components[2].collidingVelocity.y = world.objects[objId].components[0].velocity.y;
-        world.objects[objId2].components[2].mass2 = world.objects[objId].components[2].mass;
+        if(object1.type == 2){
+            world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
+            world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
+            world.objects[objId2].components[2].collidingVelocity.x = world.objects[objId].components[0].velocity.x;
+            world.objects[objId2].components[2].collidingVelocity.y = world.objects[objId].components[0].velocity.y;
+            world.objects[objId2].components[2].mass2 = world.objects[objId].components[2].mass;
         //do components[2] bounce stuff for both objects
+        }
     }   
 }
 
@@ -148,6 +173,24 @@ function laserCleanup(){
         else if(!world.objects[objId].components[2].alive){
             updateData.removed.push(objId);
         }
+    }
+}
+
+function asteroidSpawn(){
+    if (Math.random() < .5){
+        let x = (WORLD_SIZE + 20) * (Math.random() < .5 ? -1 : 1);
+        let y = WORLD_SIZE * Math.random();
+        let vectorAreaX = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
+        let vectorAreaY = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
+        let rotation = Math.atan2(vectorAreaY-y, vectorAreaX-x);
+        addObject(new Asteroid(x, y, rotation));
+    } else {
+        let y = (WORLD_SIZE + 20) * (Math.random() < .5 ? -1 : 1);
+        let x = WORLD_SIZE * Math.random();
+        let vectorAreaX = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
+        let vectorAreaY = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
+        let rotation = Math.atan2(vectorAreaY-y, vectorAreaX-x);
+        addObject(new Asteroid(x, y, rotation));
     }
 }
 
@@ -198,7 +241,8 @@ exports.setup = function(io, info) {
             if(keys.shoot && userObj.laserCooldown <= 0) {
                 // shoots from current x and y with rotation r
                 console.log(`user ${userObj.tag} shot`);
-                addObject(new Laser(userObj.x, userObj.y, userObj.r));
+                world.objects[addObject(new Laser(userObj.x, userObj.y, userObj.r))].shooterId = objId;
+                //Id of Laser object is used to assign the shooter id with current obj that is shooting
                 userObj.laserCooldown = 1;
             } else {
                 userObj.laserCooldown -= dt;
