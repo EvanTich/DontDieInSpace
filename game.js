@@ -1,12 +1,12 @@
 
 const UPDATES_PER_SECOND = 30;
 const TERRAIN_SEED = 'asteroids yo';
-const WORLD_SIZE = 4096; // not sure how big things are
+const WORLD_SIZE = 1024; // not sure how big things are
 
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
 
-const MAX_ASTEROIDS = 0;
+const MAX_ASTEROIDS = 50;
 const Engine = require("./engine.js");
 const GameObject = Engine.GameObject;
 const Player = Engine.Player;
@@ -28,7 +28,15 @@ var world = {
     static_objects: []
 };
 
-var players = {};
+function sanitize(obj) {
+    return {
+        pos: obj.pos,
+        type: obj.type,
+        _r: obj._r,
+        tag: obj.tag
+    }
+}
+
 var lastId = 0;
 
 var asteroidCount = 0;
@@ -48,8 +56,8 @@ function addObject(obj) {
 }
 
 function initWorld() {
-    for(let y = 0; y < WORLD_SIZE; y++) {
-        for(let x = 0; x < WORLD_SIZE; x++) {
+    for(let y = -WORLD_SIZE; y < WORLD_SIZE; y++) {
+        for(let x = -WORLD_SIZE; x < WORLD_SIZE; x++) {
             let nx = x / TERRAIN_SMOOTHING - 0.5, 
                 ny = y / TERRAIN_SMOOTHING - 0.5;
             let val = 
@@ -57,7 +65,7 @@ function initWorld() {
                  0.5 * noise(nx * 2, ny * 2) +
                 0.25 * noise(nx * 4, ny * 4);
             val /= 1.75; // 1.75 == all weights summed
-            if(Math.pow(val, TERRAIN_EXP) > .8) {
+            if(Math.pow(val, TERRAIN_EXP) > .85) {
                 let rand = 5+Math.floor((Math.random()*10) % 3);
                 world.static_objects.push(new GameObject(x, y, rand));
             }
@@ -87,18 +95,6 @@ function update(dt) {
         asteroidSpawn();
         asteroidCount++;
     }
-    // decrement player timers
-    for(let player in players) {
-        let timers = players[player];
-        for(let timer in timers) {
-            if(timers[timer] > 0) {
-                timers[timer] -= dt;
-                if(timers[timer] < 0) {
-                    timers[timer] = 0;
-                }
-            }
-        }
-    }
 }
 
 function getTimeMs() {
@@ -107,27 +103,30 @@ function getTimeMs() {
 
 function checkCollision() {
 
-    for(objId in world.objects){
+    for(let objId in world.objects){
         let obj1 = world.objects[objId];
         if(obj1.type == 3 || (obj1.type == 2 && obj1.components[3].invincible)){
             continue;
         }
-        for(objId2 in world.objects){
-            let obj2 = world.objects[objId2]
-            if(obj1 == obj2){
+
+        for(let objId2 in world.objects){
+            if(objId == objId2){
                 continue;
             }
-            let hitbox1 = obj1.components[1];
-            let hitbox2 = obj2.components[1];
-            if((obj1.x + hitbox1.radius >= obj2.x - hitbox2.radius || obj1.x - hitbox1.radius <= obj2.x + hitbox2.radius) 
-            && (obj1.y + hitbox1.radius >= obj2.y - hitbox2.radius || obj1.y - hitbox1.radius <= obj2.y + hitbox2.radius)){
+            let obj2 = world.objects[objId2];
+            let h1 = obj1.components[1];
+            let h2 = obj2.components[1];
+
+            let dx = obj1.x - obj2.x, 
+                dy = obj1.y - obj2.y;
+            if(Math.sqrt(dx * dx + dy * dy) < h1.radius + h2.radius){
                 collide(objId, objId2);
             }
         }
     }
 }
 
-function collide(objId, objId2,){
+function collide(objId, objId2){
     let object1 = world.objects[objId];
     let object2 = world.objects[objId2];
     if(object2.type == 3){
@@ -160,6 +159,7 @@ function collide(objId, objId2,){
             world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
             world.objects[objId2].components[2].collidingVelocity.x = world.objects[objId].components[0].velocity.x;
             world.objects[objId2].components[2].collidingVelocity.y = world.objects[objId].components[0].velocity.y;
+            world.objects[objId].components[2].mass2 = world.objects[objId2].components[2].mass;
             world.objects[objId2].components[2].mass2 = world.objects[objId].components[2].mass;
         //do components[2] bounce stuff for both objects
         }
@@ -203,12 +203,17 @@ exports.setup = function(io, info) {
         let userObj;
         let objId;
 
-        players[objId] = {
-            buildTimer: 0,
-            moveTimer: 0
+        let new_world = { 
+            size: world.size,
+            static_objects: world.static_objects,
+            objects: { ...world.objects }
         };
 
-        socket.emit('setup', world);
+        for(let id in new_world.objects) {
+            new_world.objects[id] = sanitize(new_world.objects[id]);
+        }
+
+        socket.emit('setup', new_world);
 
         socket.on('key state', keys => {
             if(typeof userObj === 'undefined')
@@ -278,7 +283,7 @@ exports.setup = function(io, info) {
                 return;
 
             userObj = new Player(world.size / 2, world.size / 2, 0);
-            userObj.tag = info[socket.conn.id].tag = nickname;
+            userObj.tag = info[socket.conn.id].nickname = nickname;
             info[socket.conn.id].object = userObj;
             
             objId = addObject(userObj);
@@ -307,23 +312,13 @@ exports.setup = function(io, info) {
 
         if(Object.entries(updateData.initialized).length !== 0) {
             for(let obj in updateData.initialized)
-                    updateData.initialized[obj] = {
-                        pos: updateData.initialized[obj].pos,
-                        type: updateData.initialized[obj].type,
-                        _r: updateData.initialized[obj]._r,
-                        tag: updateData.initialized[obj].tag
-                    };
+                    updateData.initialized[obj] = sanitize(updateData.initialized[obj]);
             
             game.emit('objects initial', updateData.initialized);
         }
         if(Object.entries(updateData.updated).length !== 0) {
             for(let obj in updateData.updated)
-                updateData.updated[obj] = {
-                    pos: updateData.updated[obj].pos,
-                    type: updateData.updated[obj].type,
-                    _r: updateData.updated[obj]._r,
-                    tag: updateData.updated[obj].tag
-                };
+                updateData.updated[obj] = sanitize(updateData.updated[obj]);
             
             game.emit('objects updated', updateData.updated);
         }
