@@ -201,10 +201,10 @@ exports.setup = function(io, info) {
                 } 
             }
             if(keys.forward) {
-                userObj.vertical += 0.5 * tb;
+                userObj.vertical -= 0.5 * tb;
             }
             if(keys.backward) {
-                userObj.vertical -= 0.5;
+                userObj.vertical += 0.5;
             }
             if(keys.left) {
                 userObj.horizontal -= 1;
