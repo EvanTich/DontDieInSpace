@@ -76,6 +76,8 @@ function update(dt) {
         updateData.updated[objId] = obj;
     }
 
+    laserCleanup();
+
     // decrement player timers
     for(let player in players) {
         let timers = players[player];
@@ -146,6 +148,17 @@ function collide(objId, objId2,){
         world.objects[objId2].components[2].mass2 = world.objects[objId].components[2].mass;
         //do components[2] bounce stuff for both objects
     }   
+}
+
+function laserCleanup(){
+    for(let objId in world.objects){
+        if(world.objects[objId].type != 3) {
+            continue;
+        }
+        else if(!world.objects[objId].components[2].alive){
+            updateData.removed.push(objId);
+        }
+    }
 }
 
 exports.setup = function(io, info) {

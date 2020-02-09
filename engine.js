@@ -168,6 +168,21 @@ class Invincible extends Component {
 
 }
 
+class Lifetime extends Component {
+
+	life = 5;
+	alive = true;
+	constructor(parent){
+		super(parent, (dt) => {
+			this.life -= dt;
+			if(this.life <= 0){
+				this.alive = false;
+			} 
+		});
+	}
+
+}
+
 class Player extends GameObject {
 
 	turboCharge = 1.5;
@@ -193,6 +208,7 @@ class Laser extends GameObject {
         
 		this.components.push(new Projectile(this, r, 8));
 		this.components.push(new Hitbox(this, 2));
+		this.components.push(new Lifetime(this));
     }
 }
 
