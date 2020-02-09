@@ -203,7 +203,7 @@ class Player extends GameObject {
 }
 
 class Laser extends GameObject {
-	
+	shooterId;
     constructor(x, y, r) {
         super(x, y, 3, r);
         

@@ -6,7 +6,7 @@ const WORLD_SIZE = 4096; // not sure how big things are
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
 
-const MAX_ASTEROIDS = 10;
+const MAX_ASTEROIDS = 0;
 const Engine = require("./engine.js");
 const GameObject = Engine.GameObject;
 const Player = Engine.Player;
@@ -135,11 +135,15 @@ function collide(objId, objId2,){
         //laser hit something
         //push object1
         //use bounce with laser data before deleting the laser
-        console.log('laser collision');
-        world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
-        world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
-        world.objects[objId].components[2].mass2 = world.objects[objId2].components[2].mass;
-        updateData.removed.push(objId2);
+        if(world.objects[objId2].shooterId == objId){
+            break;
+        }else{
+            console.log('laser collision');
+            world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
+            world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
+            world.objects[objId].components[2].mass2 = world.objects[objId2].components[2].mass;
+            updateData.removed.push(objId2);
+        }
     }
     if(object2.type == 4 && object1.type == 2){
         //player crash with asteroid
@@ -245,6 +249,7 @@ exports.setup = function(io, info) {
                 // shoots from current x and y with rotation r
                 console.log(`user ${userObj.tag} shot`);
                 addObject(new Laser(userObj.x, userObj.y, userObj.r));
+                userObj.shooterId = objId;
                 userObj.laserCooldown = 1;
             } else {
                 userObj.laserCooldown -= dt;
