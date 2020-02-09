@@ -97,17 +97,17 @@ function getTimeMs() {
 function checkCollision() {
 
     for(objId in world.objects){
-        obj1 = world.objects[objId];
+        let obj1 = world.objects[objId];
         if(obj1.type == 3 || (obj1.type == 2 && obj1.components[2].invincible)){
             continue;
         }
         for(objId2 in world.objects){
-            obj2 = world.objects[objId2]
+            let obj2 = world.objects[objId2]
             if(obj1 == obj2){
                 continue;
             }
-            hitbox1 = obj1.components[1];
-            hitbox2 = obj2.components[1];
+            let hitbox1 = obj1.components[1];
+            let hitbox2 = obj2.components[1];
             if((obj1.x + hitbox1.radius >= obj2.x - hitbox2.radius || obj1.x - hitbox1.radius <= obj2.x + hitbox2.radius) 
             && (obj1.y + hitbox1.radius >= obj2.y - hitbo2.radius || obj1.y - hitbo1.radius <= obj2.y + hitbo2.radius)){
                 collide(obj1, obj2);
@@ -118,8 +118,8 @@ function checkCollision() {
 }
 
 function collide(objId, objId2,){
-    object1 = world.objects[objId];
-    object2 = world.objects[objId2];
+    let object1 = world.objects[objId];
+    let object2 = world.objects[objId2];
     if(object2.type == 3){
         //laser hit something
         //push object1
@@ -170,7 +170,9 @@ exports.setup = function(io, info) {
             let movementComponent = userObj.components[0];
             movementComponent.vertical = 0;
             movementComponent.horizontal = 0;
-            tb = 1
+            let tb = 1
+            let turboCooldown = userObj.turboCooldown;
+            let turboCharge = userObj.turboCharge;
             if(turboCooldown > 0) {
                 turboCooldown -= dt;
                 if(turboCooldown <= 0){

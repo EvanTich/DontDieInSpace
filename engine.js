@@ -176,6 +176,8 @@ class Invincible extends Component{
 
 class Player extends GameObject {
 
+	turboCharge = 1.5;
+	turboCooldown = 5;
     constructor(x, y, r = 0, tag = '') {
 		super(x, y, 2, r, tag);
 		
