@@ -186,7 +186,8 @@ class Lifetime extends Component {
 class Player extends GameObject {
 
 	turboCharge = 1.5;
-    turboCooldown = 5;
+	turboCooldown = 10;
+	laserCooldown = 1;
     
     vertical = 0; // -1 to 1
 	horizontal = 0; // -1 to 1
@@ -202,7 +203,7 @@ class Player extends GameObject {
 }
 
 class Laser extends GameObject {
-    
+	
     constructor(x, y, r) {
         super(x, y, 3, r);
         
