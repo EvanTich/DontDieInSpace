@@ -77,7 +77,7 @@ function update(dt) {
     }
 
     laserCleanup();
-    //checkCollision();
+    checkCollision();
     // decrement player timers
     for(let player in players) {
         let timers = players[player];
