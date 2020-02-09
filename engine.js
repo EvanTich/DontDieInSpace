@@ -111,12 +111,12 @@ class Bounce extends Component {
 	constructor(parent, rotation, mass1) {
 		super(parent, (dt) => {
 			let phi = Math.atan((this.collidingVelocity.y - this.velocity.y) / (this.collidingVelocity.x - this.velocity.x))
-			let theta1 = Math.asin(this.velocity.y / Math.sqrt(Math.pow(this.velocity.x, 2)))
-			let theta2 = Math.asin(this.collidingVelocity.y / Math.sqrt(Math.pow(this.collidingVelocity.x, 2)))
-			let mag1 = Math.sqrt(Math.pow(this.velocity.x,2) + Math.pow(this.veloctiy.y,2))
+			let theta1 = Math.asin(this.velocity.y / Math.abs(this.velocity.x))
+			let theta2 = Math.asin(this.collidingVelocity.y / Math.abs(this.collidingVelocity.x))
+			let mag1 = Math.sqrt(Math.pow(this.velocity.x,2) + Math.pow(this.velocity.y,2))
 			let mag2 = Math.sqrt(Math.pow(this.collidingVelocity.x,2) + Math.pow(this.collidingVelocity.y,2))
-			this.velocity.x = ((((mag * Math.cos(theta1 - phi) * (mass1 - this.mass2)) + (2 * this.mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + this.mass2)) * Math.cos(phi) + (mag1 * Math.sin(theta1 - phi) * Math.cos(phi + (Math.PI / 2))))
-			this.velocity.y = ((((mag * Math.cos(theta1 - phi) * (mass1 - this.mass2)) + (2 * this.mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + this.mass2)) * Math.sin(phi) + (mag1 * Math.sin(theta1 - phi) * Math.sin(phi + (Math.PI / 2))))
+			this.velocity.x = ((((mag1 * Math.cos(theta1 - phi) * (mass1 - this.mass2)) + (2 * this.mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + this.mass2)) * Math.cos(phi) + (mag1 * Math.sin(theta1 - phi) * Math.cos(phi + (Math.PI / 2))))
+			this.velocity.y = ((((mag1 * Math.cos(theta1 - phi) * (mass1 - this.mass2)) + (2 * this.mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + this.mass2)) * Math.sin(phi) + (mag1 * Math.sin(theta1 - phi) * Math.sin(phi + (Math.PI / 2))))
 		})	
 	}
 }
@@ -168,10 +168,26 @@ class Invincible extends Component {
 
 }
 
+class Lifetime extends Component {
+
+	life = 10;
+	alive = true;
+	constructor(parent){
+		super(parent, (dt) => {
+			this.life -= dt;
+			if(this.life <= 0){
+				this.alive = false;
+			} 
+		});
+	}
+
+}
+
 class Player extends GameObject {
 
 	turboCharge = 1.5;
-    turboCooldown = 5;
+	turboCooldown = 10;
+	laserCooldown = 1;
     
     vertical = 0; // -1 to 1
 	horizontal = 0; // -1 to 1
@@ -187,12 +203,13 @@ class Player extends GameObject {
 }
 
 class Laser extends GameObject {
-    
+	
     constructor(x, y, r) {
         super(x, y, 3, r);
         
 		this.components.push(new Projectile(this, r, 8));
 		this.components.push(new Hitbox(this, 2));
+		this.components.push(new Lifetime(this));
     }
 }
 

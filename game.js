@@ -53,8 +53,9 @@ function initWorld() {
                  0.5 * noise(nx * 2, ny * 2) +
                 0.25 * noise(nx * 4, ny * 4);
             val /= 1.75; // 1.75 == all weights summed
-            if(Math.pow(val, TERRAIN_EXP) > .85) {
-                world.static_objects.push(new GameObject(x, y, 1))
+            if(Math.pow(val, TERRAIN_EXP) > .8) {
+                let rand = 5+Math.floor((Math.random()*10) % 3);
+                world.static_objects.push(new GameObject(x, y, rand));
             }
         }
     }
@@ -76,6 +77,8 @@ function update(dt) {
         updateData.updated[objId] = obj;
     }
 
+    laserCleanup();
+    checkCollision();
     // decrement player timers
     for(let player in players) {
         let timers = players[player];
@@ -109,8 +112,8 @@ function checkCollision() {
             let hitbox1 = obj1.components[1];
             let hitbox2 = obj2.components[1];
             if((obj1.x + hitbox1.radius >= obj2.x - hitbox2.radius || obj1.x - hitbox1.radius <= obj2.x + hitbox2.radius) 
-            && (obj1.y + hitbox1.radius >= obj2.y - hitbo2.radius || obj1.y - hitbo1.radius <= obj2.y + hitbo2.radius)){
-                collide(obj1, obj2);
+            && (obj1.y + hitbox1.radius >= obj2.y - hitbox2.radius || obj1.y - hitbox1.radius <= obj2.y + hitbox2.radius)){
+                collide(objId, objId2);
             }
         }
     }
@@ -124,6 +127,10 @@ function collide(objId, objId2,){
         //laser hit something
         //push object1
         //use bounce with laser data before deleting the laser
+        console.log('laser collision');
+        world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
+        world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
+        world.objects[objId].components[2].mass2 = world.objects[objId2].components[2].mass;
         updateData.removed.push(objId2);
     }
     if(object2.type == 4 && object1.type == 2){
@@ -135,10 +142,26 @@ function collide(objId, objId2,){
         updateData.removed.push(objId2);
     }
     if(object1.type == object2.type){
+        console.log('player collisions');
         //bounce
-        world.objects[objId].components[1]
+        world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
+        world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
+        world.objects[objId2].components[2].collidingVelocity.x = world.objects[objId].components[0].velocity.x;
+        world.objects[objId2].components[2].collidingVelocity.y = world.objects[objId].components[0].velocity.y;
+        world.objects[objId2].components[2].mass2 = world.objects[objId].components[2].mass;
         //do components[2] bounce stuff for both objects
     }   
+}
+
+function laserCleanup(){
+    for(let objId in world.objects){
+        if(world.objects[objId].type != 3) {
+            continue;
+        }
+        else if(!world.objects[objId].components[2].alive){
+            updateData.removed.push(objId);
+        }
+    }
 }
 
 exports.setup = function(io, info) {
@@ -174,7 +197,7 @@ exports.setup = function(io, info) {
                 tb = 2;
                 userObj.turboCharge -= dt;
                 if(userObj.turboCharge <= 0) {
-                    userObj.turboCooldown = 5;
+                    userObj.turboCooldown = 10;
                 } 
             }
             if(keys.forward) {
@@ -190,10 +213,13 @@ exports.setup = function(io, info) {
                 userObj.horizontal += 1;
             }
 
-            if(keys.shoot) {
+            if(keys.shoot && userObj.laserCooldown <= 0) {
                 // shoots from current x and y with rotation r
                 console.log(`user ${userObj.tag} shot`);
                 addObject(new Laser(userObj.x, userObj.y, userObj.r));
+                userObj.laserCooldown = 1;
+            } else {
+                userObj.laserCooldown -= dt;
             }
             
             updateData.updated[objId] = userObj;

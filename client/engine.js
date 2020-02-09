@@ -8,10 +8,12 @@
 const typeMap = {
 	// id: {img: image path, r: radius of hitbox from the center}
 	'-1': {img_src: '', r: 0}, // NOTHING
-    1: {img_src: 'client/imgs/star.png', r: 0}, // STAR
     2: {img_src: 'client/imgs/ship.png', r: 6}, // PLAYER
     3: {img_src: 'client/imgs/laser.png', r: 2}, // PROJECTILE
-    4: {img_src: 'client/imgs/rock1.png', r: 10} // ASTEROID
+    4: {img_src: 'client/imgs/rock1.png', r: 10}, // ASTEROID
+    5: {img_src: 'client/imgs/star.png', r: 0}, // STAR
+	6: {img_src: 'client/imgs/star_small.png', r: 0}, // STAR
+	7: {img_src: 'client/imgs/star_big.png', r: 0} // STAR
 }
 
 for(let i in typeMap) {
