@@ -124,6 +124,9 @@ function collide(objId, objId2,){
         //laser hit something
         //push object1
         //use bounce with laser data before deleting the laser
+        world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
+        world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
+        world.objects[objId].components[2].mass2 = world.objects[objId2].components[2].mass;
         updateData.removed.push(objId2);
     }
     if(object2.type == 4 && object1.type == 2){
@@ -136,7 +139,11 @@ function collide(objId, objId2,){
     }
     if(object1.type == object2.type){
         //bounce
-        world.objects[objId].components[2].collidingVelocity.x = 
+        world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
+        world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
+        world.objects[objId2].components[2].collidingVelocity.x = world.objects[objId].components[0].velocity.x;
+        world.objects[objId2].components[2].collidingVelocity.y = world.objects[objId].components[0].velocity.y;
+        world.objects[objId2].components[2].mass2 = world.objects[objId].components[2].mass;
         //do components[2] bounce stuff for both objects
     }   
 }
