@@ -112,7 +112,7 @@ function setupUser(socket, info) {
 	users[userId] = socket;
 
 	let user = info[socket.conn.id];
-	user.chatId = userId;
+    user.chatId = userId;
 	return user;
 }
 
@@ -120,7 +120,6 @@ var chat;
 exports.setup = function(io, info) {
 	return chat = io.of('/chat').on('connection', socket => {
         let user = setupUser(socket, info);
-        
 
 		if(DEBUG) console.log(`user #${user.tag} and id ${socket.id} connected`);
 		

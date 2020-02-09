@@ -20,6 +20,9 @@ Made at UGAHacks 5.
 ` -> 'objects updated'` with updated = {id: object, ...}
 ` -> 'objects removed'` with removed = [id, ...]
 
+### User dies
+` -> 'death'` with nothing - reload page
+
 ### User leaves
 ` <- 'disconnect'` with reason, remove user from game data
 
@@ -67,10 +70,11 @@ Made at UGAHacks 5.
     - [ ] bouncing
 - [ ] set laser to not collide with parent
 - [ ] drawing death zone on client, if statements on server
-- [ ] player timers, like boost and lasers
+- [x] player timers, like boost and lasers
 - [ ] asteroids spawning
 - [ ] up rotation velocity
 - [ ] cap max velocity on ships
 - [ ] make lasers faster?
-- [ ] randomize stars
+- [x] randomize stars
 - [ ] camera border?
+- [ ] death screen

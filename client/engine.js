@@ -305,9 +305,9 @@ export class CanvasHandler {
 		return this.getTilePosFromCanvasPos(this.mouse);
 	}
 
-	get cx() { return this.follow.x - this.cs / 2; } // camera x (in the top right corner)
-	get cy() { return this.follow.y - this.cs / 2; } // camera y ^
-	get cmax() { return 256; } // max camera size
+	get cx() { return this.follow.x - 2 * this.cs + 16; } // camera x (in the top right corner)
+	get cy() { return this.follow.y - 2 * this.cs + 16; } // camera y ^
+	get cmax() { return 128; } // max camera size
 	get cs() { return this.cmax / this.cz; } // camera size
 	get cz() { return 2 * this.zoom; } // camera zoom
 

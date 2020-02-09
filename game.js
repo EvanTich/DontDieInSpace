@@ -1,7 +1,7 @@
 
 const UPDATES_PER_SECOND = 30;
 const TERRAIN_SEED = 'asteroids yo';
-const WORLD_SIZE = 4096; // not sure how big things are
+const WORLD_SIZE = 1024; // not sure how big things are
 
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
@@ -26,7 +26,6 @@ var world = {
     static_objects: []
 };
 
-var players = {};
 var lastId = 0;
 
 function noise(x, y) {
@@ -44,8 +43,8 @@ function addObject(obj) {
 }
 
 function initWorld() {
-    for(let y = 0; y < WORLD_SIZE; y++) {
-        for(let x = 0; x < WORLD_SIZE; x++) {
+    for(let y = -WORLD_SIZE; y < WORLD_SIZE; y++) {
+        for(let x = -WORLD_SIZE; x < WORLD_SIZE; x++) {
             let nx = x / TERRAIN_SMOOTHING - 0.5, 
                 ny = y / TERRAIN_SMOOTHING - 0.5;
             let val = 
@@ -53,7 +52,7 @@ function initWorld() {
                  0.5 * noise(nx * 2, ny * 2) +
                 0.25 * noise(nx * 4, ny * 4);
             val /= 1.75; // 1.75 == all weights summed
-            if(Math.pow(val, TERRAIN_EXP) > .8) {
+            if(Math.pow(val, TERRAIN_EXP) > .85) {
                 let rand = 5+Math.floor((Math.random()*10) % 3);
                 world.static_objects.push(new GameObject(x, y, rand));
             }
@@ -79,18 +78,6 @@ function update(dt) {
 
     laserCleanup();
     checkCollision();
-    // decrement player timers
-    for(let player in players) {
-        let timers = players[player];
-        for(let timer in timers) {
-            if(timers[timer] > 0) {
-                timers[timer] -= dt;
-                if(timers[timer] < 0) {
-                    timers[timer] = 0;
-                }
-            }
-        }
-    }
 }
 
 function getTimeMs() {
@@ -172,11 +159,6 @@ exports.setup = function(io, info) {
         let userObj;
         let objId;
 
-        players[objId] = {
-            buildTimer: 0,
-            moveTimer: 0
-        };
-
         socket.emit('setup', world);
 
         socket.on('key state', keys => {
@@ -246,7 +228,7 @@ exports.setup = function(io, info) {
                 return;
 
             userObj = new Player(world.size / 2, world.size / 2, 0);
-            userObj.tag = info[socket.conn.id].tag = nickname;
+            userObj.tag = info[socket.conn.id].nickname = nickname;
             info[socket.conn.id].object = userObj;
             
             objId = addObject(userObj);

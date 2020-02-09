@@ -12,8 +12,10 @@ body {
 	position: relative;
 	top: 0px;
 	padding: 8px 8px;
-	display: flex;
+    display: flex;
+    background: gray;
 }
+
 .special {
 	display: inline-block;
 }
