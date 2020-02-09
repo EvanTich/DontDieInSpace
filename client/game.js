@@ -62,7 +62,7 @@ function keys(dt) {
 		} else {
 			debugDiv.style.display = "none";
 		}
-	}
+    }
 	
 	if(ih.state.chat) {
 		$("#m").focus();
@@ -73,6 +73,9 @@ function keys(dt) {
 
 function update(dt) {
     // stuff
+    for(let id in world.objects) {
+        world.objects[id].r += 100 * dt;
+    }
 
 	keys(dt);
 }

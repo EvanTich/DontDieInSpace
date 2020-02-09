@@ -71,11 +71,7 @@ function emptyUpdateData() {
 function update(dt) {
     for(let objId in world.objects) {
         let obj = world.objects[objId];
-
-        switch(obj.type) {
-            default:
-                break;
-        }
+        obj.update(dt);
     }
 
     // decrement player timers
@@ -168,20 +164,18 @@ exports.setup = function(io, info) {
             let movementComponent = userObj.components[0];
             movementComponent.vertical = 0;
             movementComponent.horizontal = 0;
-            let tb = 1
-            let turboCooldown = userObj.turboCooldown;
-            let turboCharge = userObj.turboCharge;
-            if(turboCooldown > 0) {
-                turboCooldown -= dt;
-                if(turboCooldown <= 0){
-                    turboCharge = 1.5
+            let tb = 1;
+            if(userObj.turboCooldown > 0) {
+                userObj.turboCooldown -= dt;
+                if(userObj.turboCooldown <= 0){
+                    userObj.turboCharge = 1.5
                 }
             }
-            if(keys.turbo && turboCharge > 0) {
+            if(keys.turbo && userObj.turboCharge > 0) {
                 tb = 2;
-                turboCharge -= dt;
-                if(turboCharge <= 0) {
-                    turboCooldown = 5;
+                userObj.turboCharge -= dt;
+                if(userObj.turboCharge <= 0) {
+                    userObj.turboCooldown = 5;
                 } 
             }
             if(keys.forward) {
@@ -204,7 +198,6 @@ exports.setup = function(io, info) {
             }
             
             updateData.updated[objId] = userObj;
-            console.log('7');
         });
         // Occurs when the user inputs a name on the splash
         socket.on('ready', nickname => {
@@ -230,10 +223,8 @@ exports.setup = function(io, info) {
             
             objId = addObject(userObj);
             info[socket.conn.id].objectId = objId;
-            console.log('4');
 
             socket.emit('ready', objId);
-            console.log('5');
         });
 
         socket.on('disconnect', reason => {
@@ -242,7 +233,6 @@ exports.setup = function(io, info) {
                 updateData.removed.push(objId);
         });
 
-        console.log('3');
     });
 
     lastTime = getTimeMs();
@@ -255,10 +245,18 @@ exports.setup = function(io, info) {
         // only send data that is needed, 
         //  ie. split update into init, updated, and removed
 
-        if(Object.entries(updateData.initialized).length !== 0)
+        if(Object.entries(updateData.initialized).length !== 0) {
+            for(let obj in updateData.initialized)
+                updateData.initialized[obj].components = [];
+            
             game.emit('objects initial', updateData.initialized);
-        if(Object.entries(updateData.updated).length !== 0)
+        }
+        if(Object.entries(updateData.updated).length !== 0) {
+            for(let obj in updateData.updated)
+                updateData.initialized[obj].components = [];
+            
             game.emit('objects updated', updateData.updated);
+        }
         if(Object.entries(updateData.removed).length !== 0) {
             for(let id of updateData.removed) {
                 console.log(`actually deleted object ${id}`);

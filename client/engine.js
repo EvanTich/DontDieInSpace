@@ -104,15 +104,14 @@ export class GameObject {
 		
 		g.save();
 		g.translate((this.x - state.cx) * state.cz, (this.y - state.cy) * state.cz);
-		//g.rotate(this.r * Math.PI / 180);
+		g.rotate(this.r * Math.PI / 180);
 		if(this.type == -1) {
 			g.fillRect(-w / 2, -h / 2, w, h);
 		} else {
-            g.fillRect(-w / 2, -h / 2, w, h);
-			// let t = typeMap[1];
-			// g.drawImage(t.img, 
-			// 	Math.round(-w / 2), Math.round(-h / 2), w, h
-			// );
+			let t = typeMap[1];
+			g.drawImage(t.img, 
+				Math.round(-w / 2), Math.round(-h / 2), w, h
+			);
 		}
 
 		if(this.tag) {
