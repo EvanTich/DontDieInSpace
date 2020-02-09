@@ -164,7 +164,7 @@ function collide(objId, objId2){
 function cleanup(){
     for(let objId in world.objects){
         if(world.objects[objId].type == 2 || world.objects[objId].type == 4) {
-            if(world.objects[objId].x > WORLD_SIZE || world.objects[objId].x < -WORLD_SIZE || world.objects[objId].y > WORLD_SIZE || world.objects[objId].x < -WORLD_SIZE){
+            if(world.objects[objId].x > WORLD_SIZE + 50 || world.objects[objId].x < -WORLD_SIZE - 50 || world.objects[objId].y > WORLD_SIZE + 50 || world.objects[objId].x < -WORLD_SIZE - 50){
                 updateData.removed.push(objId);
             }
         }else if(world.objects[objId].type == 3 && !world.objects[objId].components[2].alive){
