@@ -77,7 +77,7 @@ function update(dt) {
     }
 
     laserCleanup();
-
+    //checkCollision();
     // decrement player timers
     for(let player in players) {
         let timers = players[player];
@@ -111,8 +111,8 @@ function checkCollision() {
             let hitbox1 = obj1.components[1];
             let hitbox2 = obj2.components[1];
             if((obj1.x + hitbox1.radius >= obj2.x - hitbox2.radius || obj1.x - hitbox1.radius <= obj2.x + hitbox2.radius) 
-            && (obj1.y + hitbox1.radius >= obj2.y - hitbo2.radius || obj1.y - hitbo1.radius <= obj2.y + hitbo2.radius)){
-                collide(obj1, obj2);
+            && (obj1.y + hitbox1.radius >= obj2.y - hitbox2.radius || obj1.y - hitbox1.radius <= obj2.y + hitbox2.radius)){
+                collide(objId, objId2);
             }
         }
     }

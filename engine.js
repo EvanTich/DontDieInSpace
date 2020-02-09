@@ -170,7 +170,7 @@ class Invincible extends Component {
 
 class Lifetime extends Component {
 
-	life = 5;
+	life = 10;
 	alive = true;
 	constructor(parent){
 		super(parent, (dt) => {
