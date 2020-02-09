@@ -125,7 +125,6 @@ function checkCollision() {
             }
         }
     }
-
 }
 
 function collide(objId, objId2,){
@@ -136,7 +135,7 @@ function collide(objId, objId2,){
         //push object1
         //use bounce with laser data before deleting the laser
         if(world.objects[objId2].shooterId == objId){
-            break;
+            return;
         }else{
             console.log('laser collision');
             world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
@@ -248,8 +247,8 @@ exports.setup = function(io, info) {
             if(keys.shoot && userObj.laserCooldown <= 0) {
                 // shoots from current x and y with rotation r
                 console.log(`user ${userObj.tag} shot`);
-                addObject(new Laser(userObj.x, userObj.y, userObj.r));
-                userObj.shooterId = objId;
+                world.objects[addObject(new Laser(userObj.x, userObj.y, userObj.r))].shooterId = objId;
+                //Id of Laser object is used to assign the shooter id with current obj that is shooting
                 userObj.laserCooldown = 1;
             } else {
                 userObj.laserCooldown -= dt;
