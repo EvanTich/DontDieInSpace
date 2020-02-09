@@ -202,7 +202,7 @@ class Player extends GameObject {
 		
 		this.components.push(new Movement(this));
 		this.components.push(new Hitbox(this, 6))
-		this.components.push(new Bounce(this, 1))
+		this.components.push(new Bounce(this, 2))
 		this.components.push(new Invincible(this))
     }
 }
