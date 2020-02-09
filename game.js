@@ -166,6 +166,9 @@ function cleanup(){
         if(world.objects[objId].type == 2 || world.objects[objId].type == 4) {
             if(world.objects[objId].x > WORLD_SIZE + 50 || world.objects[objId].x < -WORLD_SIZE - 50 || world.objects[objId].y > WORLD_SIZE + 50 || world.objects[objId].x < -WORLD_SIZE - 50){
                 updateData.removed.push(objId);
+                if(world.objects[objId.type] == 4){
+                    asteroidCount--;
+                }
             }
         }else if(world.objects[objId].type == 3 && !world.objects[objId].components[2].alive){
             updateData.removed.push(objId);
