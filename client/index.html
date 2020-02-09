@@ -6,28 +6,41 @@
 		<link rel="stylesheet" href="client/style.css" type="text/css">
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		
 	</head>
 	<body>
         <div id="splash">
             <form id="splash_form">
                 <label for="nickname">Nickname: </label>
-                <input type="text" id="nickname"> <br>
-                <button>Play!</button>
+				<input type="text" id="nickname"> <br>
+				<div id="pbutton">
+					<button>Play!</button>
+				</div>
             </div>
         </div>
         <div class="main_view">
-		    <div class="game">
-		    	<div id="topBar">
-		    		<div id="fps"></div> <div id="userId"></div>
-		    	</div>
-		    	<canvas id="canvas" width="512px" height="512px"></canvas>
-		    </div>
-		    <div class="side">
-		    	<ul class="chat" id="messages"></ul>
-		    </div>
-		    <form id="chat_form" action="">
-		    	<input id="m" autocomplete="off" maxlength="300"/><button>Send</button>
-            </form>
+			<div class="row">
+
+				<div class="col" style="border-style: solid;">
+					<div class="game">
+						<div id="topBar">
+							<div id="fps"></div> <div id="userId"></div>
+						</div>
+						<canvas id="canvas" width="512px" height="512px"></canvas>
+					</div>
+				</div>
+				<div class="col" style="border-style: solid;">
+					<div class="side">
+						<ul class="chat" id="messages"></ul>
+					</div>
+					<form id="chat_form" action="">
+						<input id="m" autocomplete="off" maxlength="300"/><button>Send</button>
+					</form>
+				</div>
+			  </div>
+
         </div>
 		<div id="debug" style="display: none"></div>
 		<script type="module" src="client/game.js"></script>

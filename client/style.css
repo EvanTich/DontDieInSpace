@@ -14,6 +14,9 @@ body {
 	padding: 8px 8px;
 	display: flex;
 }
+.special {
+	display: inline-block;
+}
 
 #splash {
     position: fixed;
@@ -31,21 +34,18 @@ body {
 #splash_form {
     position: absolute;
     top: 50%;
-    left: 50%;
-    font-size: 30px;
+	left: 50%;
+	max-width: 40%;
+    font-size: 28px;
     color: white;
     transform: translate(-50%,-50%);
     -ms-transform: translate(-50%,-50%);
 }
 
 .main_view {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    /* color: white; */
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
+	margin: 0 auto;
+    font-size: 20px;
+    color: white;
 }
 
 #userId {
@@ -64,6 +64,7 @@ body {
 } */
 
 .chat {
+	color: black;
 	font: 13px Helvetica, Arial; 
 	background: whitesmoke;
 	flex: 1;
