@@ -104,11 +104,11 @@ export class GameObject {
 		
 		g.save();
 		g.translate((this.x - state.cx) * state.cz, (this.y - state.cy) * state.cz);
-		g.rotate(this.r * Math.PI / 180);
+		g.rotate(this.r);
 		if(this.type == -1) {
 			g.fillRect(-w / 2, -h / 2, w, h);
 		} else {
-			let t = typeMap[1];
+			let t = typeMap[this.type];
 			g.drawImage(t.img, 
 				Math.round(-w / 2), Math.round(-h / 2), w, h
 			);

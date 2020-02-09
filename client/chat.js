@@ -70,7 +70,7 @@ $(() => {
 	// cool, we'll get the id soon; on to more important stuff
 	
 	mBox.keydown(chatKeyDown);
-    $('#chat_form').submit( e => {
+    $('#chat_form form').submit( e => {
 		e.preventDefault();
 		let m = mBox.val();
 		

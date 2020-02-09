@@ -73,9 +73,9 @@ function keys(dt) {
 
 function update(dt) {
     // stuff
-    for(let id in world.objects) {
-        world.objects[id].r += 100 * dt;
-    }
+    // for(let id in world.objects) {
+    //     world.objects[id].r += 100 * dt;
+    // }
 
 	keys(dt);
 }

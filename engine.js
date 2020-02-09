@@ -43,7 +43,7 @@ class GameObject {
 	}
     
     update(dt) {
-        for(let comp of components) {
+        for(let comp of this.components) {
             comp.update(dt);
         }
     }
@@ -94,8 +94,8 @@ class Projectile extends Component {
     
     constructor(parent, rotation, speed) {
         super(parent, (dt) => {
-            parent.x += velocity.x * dt;
-            parent.y += velocity.y * dt;
+            parent.x += this.velocity.x * dt;
+            parent.y += this.velocity.y * dt;
         });
 
         this.velocity = new Pos(speed * Math.cos(rotation), speed * Math.sin(rotation));
@@ -122,43 +122,41 @@ class Hitbox extends Component {
 
 	constructor(parent, radius) {
         super(parent);
-        
+
 		this.radius = radius;
 	}
 }
 
 class Movement extends Component {
 
-	vertical; // -1 to 1
-	horizontal; // -1 to 1
+	// velocity
 
 	constructor(parent){
 		super(parent, (dt) => {
-			let acc = new Pos(this.vertical * Math.cos(parent.r), this.vertical * Math.sin(parent.r));
-			this.velocity.x += acc.x * dt;
+			let acc = new Pos(parent.vertical * Math.cos(parent.r), parent.vertical * Math.sin(parent.r));
+            this.velocity.x += acc.x * dt * 30;
 			this.velocity.x *= 0.95
-			this.velocity.y += acc.y * dt;
+			this.velocity.y += acc.y * dt * 30;
 			this.velocity.y *= 0.95
-			parent.x += velocity.x * dt;
-			parent.y += velocity.y * dt;
+			parent.x += this.velocity.x * dt * 30;
+			parent.y += this.velocity.y * dt * 30;
 
-			parent.r += this.horizontal * dt;
-		})
+			parent.r += parent.horizontal * dt;
+		});
 
 		this.velocity = new Pos(0, 0);
 	}
-
 } 
 
-class Invincible extends Component{
+class Invincible extends Component {
 	
 	invincible = true;
 	timer = 2;
 	constructor(parent){
 		super(parent, (dt) => {
-			timer -= dt
-			if(timer <= 0) {
-				invincible = false;
+			this.timer -= dt
+			if(this.timer <= 0) {
+				this.invincible = false;
 			}
 		})
 	}
@@ -168,7 +166,11 @@ class Invincible extends Component{
 class Player extends GameObject {
 
 	turboCharge = 1.5;
-	turboCooldown = 5;
+    turboCooldown = 5;
+    
+    vertical = 0; // -1 to 1
+	horizontal = 0; // -1 to 1
+
     constructor(x, y, r = 0, tag = '') {
 		super(x, y, 2, r, tag);
 		

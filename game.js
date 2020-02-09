@@ -9,6 +9,7 @@ const TERRAIN_EXP = 2; // mountains higher, valleys lower
 const Engine = require("./engine.js");
 const GameObject = Engine.GameObject;
 const Player = Engine.Player;
+const Laser = Engine.Laser;
 
 const SimplexNoise = require('simplex-noise');
 const simplex = new SimplexNoise(TERRAIN_SEED);
@@ -154,17 +155,18 @@ exports.setup = function(io, info) {
 
         socket.emit('setup', world);
 
-        socket.on('state keys', keys => {
+        socket.on('key state', keys => {
+            if(typeof userObj === 'undefined')
+                return;
+
             // server side state management
-            console.log('6');
-            let movementComponent = userObj.components[0];
-            movementComponent.vertical = 0;
-            movementComponent.horizontal = 0;
+            userObj.vertical = 0;
+            userObj.horizontal = 0;
             let tb = 1;
             if(userObj.turboCooldown > 0) {
                 userObj.turboCooldown -= dt;
                 if(userObj.turboCooldown <= 0){
-                    userObj.turboCharge = 1.5
+                    userObj.turboCharge = 1.5;
                 }
             }
             if(keys.turbo && userObj.turboCharge > 0) {
@@ -175,22 +177,22 @@ exports.setup = function(io, info) {
                 } 
             }
             if(keys.forward) {
-                movementComponent.vertical += 0.5 * tb;
+                userObj.vertical += 0.5 * tb;
             }
             if(keys.backward) {
-                movementComponent.vertical -= 0.5;
+                userObj.vertical -= 0.5;
             }
             if(keys.left) {
-                movementComponent.horizontal -= 1;
+                userObj.horizontal -= 1;
             }
             if(keys.right) {
-                movementComponent.horizontal += 1;
+                userObj.horizontal += 1;
             }
 
             if(keys.shoot) {
                 // shoots from current x and y with rotation r
                 console.log(`user ${userObj.tag} shot`);
-                addObject(new GameObject(userObj.x, userObj.y, userObj.r));
+                addObject(new Laser(userObj.x, userObj.y, userObj.r));
             }
             
             updateData.updated[objId] = userObj;
@@ -243,13 +245,23 @@ exports.setup = function(io, info) {
 
         if(Object.entries(updateData.initialized).length !== 0) {
             for(let obj in updateData.initialized)
-                updateData.initialized[obj].components = [];
+                    updateData.initialized[obj] = {
+                        pos: updateData.initialized[obj].pos,
+                        type: updateData.initialized[obj].type,
+                        _r: updateData.initialized[obj]._r,
+                        tag: updateData.initialized[obj].tag
+                    };
             
             game.emit('objects initial', updateData.initialized);
         }
         if(Object.entries(updateData.updated).length !== 0) {
             for(let obj in updateData.updated)
-                updateData.initialized[obj].components = [];
+                updateData.updated[obj] = {
+                    pos: updateData.updated[obj].pos,
+                    type: updateData.updated[obj].type,
+                    _r: updateData.updated[obj]._r,
+                    tag: updateData.updated[obj].tag
+                };
             
             game.emit('objects updated', updateData.updated);
         }

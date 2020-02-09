@@ -119,7 +119,8 @@ function setupUser(socket, info) {
 var chat;
 exports.setup = function(io, info) {
 	return chat = io.of('/chat').on('connection', socket => {
-		let user = setupUser(socket, info);
+        let user = setupUser(socket, info);
+        
 
 		if(DEBUG) console.log(`user #${user.tag} and id ${socket.id} connected`);
 		
@@ -169,6 +170,6 @@ exports.setup = function(io, info) {
 
 			chat.emit('user disconnect', { tag: user.tag });
 			delete users[user.chatId];
-		});
+        });
 	});
 }
