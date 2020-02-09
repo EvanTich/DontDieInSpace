@@ -236,7 +236,11 @@ exports.setup = function(io, info) {
                 } 
             }
             if(keys.forward) {
-                userObj.vertical += 0.5 * tb;
+                if(userObj.vertical >= 100){
+                    userObj.vertical += 0;
+                }else{
+                    userObj.vertical += 0.5 * tb;
+                }
             }
             if(keys.backward) {
                 userObj.vertical -= 0.5;
