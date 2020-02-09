@@ -127,6 +127,7 @@ function collide(objId, objId2,){
         //laser hit something
         //push object1
         //use bounce with laser data before deleting the laser
+        console.log('laser collision');
         world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
         world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
         world.objects[objId].components[2].mass2 = world.objects[objId2].components[2].mass;
@@ -141,6 +142,7 @@ function collide(objId, objId2,){
         updateData.removed.push(objId2);
     }
     if(object1.type == object2.type){
+        console.log('player collisions');
         //bounce
         world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
         world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
@@ -195,7 +197,7 @@ exports.setup = function(io, info) {
                 tb = 2;
                 userObj.turboCharge -= dt;
                 if(userObj.turboCharge <= 0) {
-                    userObj.turboCooldown = 5;
+                    userObj.turboCooldown = 10;
                 } 
             }
             if(keys.forward) {
@@ -211,10 +213,13 @@ exports.setup = function(io, info) {
                 userObj.horizontal += 1;
             }
 
-            if(keys.shoot) {
+            if(keys.shoot && userObj.laserCooldown <= 0) {
                 // shoots from current x and y with rotation r
                 console.log(`user ${userObj.tag} shot`);
                 addObject(new Laser(userObj.x, userObj.y, userObj.r));
+                userObj.laserCooldown = 1;
+            } else {
+                userObj.laserCooldown -= dt;
             }
             
             updateData.updated[objId] = userObj;
