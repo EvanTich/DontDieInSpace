@@ -163,7 +163,7 @@ export class InputHandler {
 		window.addEventListener("keyup", e => this._keyup(e), false);
 	}
 
-	// TODO
+	// TODO xo
 	_keydown(e) {
 		var key = this._actions[e.keyCode] || this._actions["default"];
 		if(this._toggle.includes(key) && !this.state[key + '_raw']) {
