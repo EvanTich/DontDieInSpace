@@ -14,11 +14,10 @@
         <div id="splash">
             <form id="splash_form">
                 <label for="nickname">Nickname: </label>
-				<input type="text" id="nickname"> <br>
-				<div id="pbutton">
-					<button>Play!</button>
-				</div>
-            </div>
+                <input type="text" autocomplete="off" id="nickname">
+                <br> <br>
+				<input type="submit" value="Play!">
+            </form>
         </div>
         <div class="main_view">
 			<div class="row">
@@ -35,8 +34,9 @@
 					<div class="side">
 						<ul class="chat" id="messages"></ul>
 					</div>
-					<form id="chat_form" action="">
-						<input id="m" autocomplete="off" maxlength="300"/><button>Send</button>
+					<form id="chat_form">
+                        <input id="m" autocomplete="off" maxlength="300">
+                        <input type="submit" value="Send">
 					</form>
 				</div>
 			  </div>

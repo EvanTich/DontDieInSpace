@@ -98,7 +98,7 @@ class Projectile extends Component {
             parent.y += this.velocity.y * dt;
         });
 
-        this.velocity = new Pos(speed * Math.cos(rotation), speed * Math.sin(rotation));
+        this.velocity = new Pos(30 * speed * Math.cos(rotation), 30 * speed * Math.sin(rotation));
     }
 }
 
@@ -187,7 +187,7 @@ class Laser extends GameObject {
         super(x, y, 3, r);
         
 		this.components.push(new Projectile(this, r, 8));
-		this.components.push(new Hitbox(this, 2))
+		this.components.push(new Hitbox(this, 2));
     }
 }
 

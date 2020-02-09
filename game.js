@@ -73,6 +73,7 @@ function update(dt) {
     for(let objId in world.objects) {
         let obj = world.objects[objId];
         obj.update(dt);
+        updateData.updated[objId] = obj;
     }
 
     // decrement player timers
@@ -214,6 +215,9 @@ exports.setup = function(io, info) {
             } else {    // Nickname isn't free
 
             }*/
+
+            if(typeof userObj !== 'undefined')
+                return;
 
             userObj = new Player(world.size / 2, world.size / 2, 0);
             userObj.tag = info[socket.conn.id].tag = nickname;
