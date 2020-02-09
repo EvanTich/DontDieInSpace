@@ -105,12 +105,20 @@ class Projectile extends Component {
 class Bounce extends Component {
 
 	collidingVelocity = new Pos(0,0);
+	mass2 = 0;
 	velocity = new Pos(0,0);
 
-	constructor(parent, rotation, mass) {
+	constructor(parent, rotation, mass1) {
 		super(parent, (dt) => {
-			this.velocity.x += this.collidingVelocity.x * mass;
-			this.velocity.y += this.collidingVelocity.y * mass; 
+			let phi = Math.atan((collidingVelocity.y - velocity.y) / (collidingVelocity.x - velocity.x))
+			let theta1 = Math.asin(velocity.y / Math.sqrt(Math.pow(velocity.x, 2)))
+			let theta2 = Math.asin(collidingVelocity.y / Math.sqrt(Math.pow(collidingVelocity.x, 2)))
+			let mag1 = Math.sqrt(Math.pow(velocity.x,2) + Math.pow(veloctiy.y,2))
+			let mag2 = Math.sqrt(Math.pow(collidingVelocity.x,2) + Math.pow(collidingVelocity.y,2))
+			this.velocity.x = ((((mag * Math.cos(theta1 - phi) * (mass1 - mass2)) + (2 * mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + mass2)) * Math.cos(phi) + (mag1 * Math.sin(theta1 - phi) * Math.cos(phi + (Math.PI / 2))))
+			this.velocity.y = ((((mag * Math.cos(theta1 - phi) * (mass1 - mass2)) + (2 * mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + mass2)) * Math.sin(phi) + (mag1 * Math.sin(theta1 - phi) * Math.sin(phi + (Math.PI / 2))))
+			//this.velocity.x += this.collidingVelocity.x * mass;
+			//this.velocity.y += this.collidingVelocity.y * mass; 
 		})
 	
 	}
