@@ -34,6 +34,8 @@ var debugMode = false;
 const debugDiv = $("#debug")[0];
 var renderedObjects = 0;
 
+var chatDisabled = true;
+
 var game;
 var objId;
 
@@ -63,8 +65,8 @@ function keys(dt) {
 			debugDiv.style.display = "none";
 		}
     }
-	
-	if(ih.state.chat) {
+    
+	if(ih.state.chat && chatDisabled) {
 		$("#m").focus();
 	}
 
@@ -137,6 +139,7 @@ $( () => {
         if(typeof world.objects[objId] !== undefined)
             ch.followObj(world.objects[objId]);
         $('#splash')[0].style.display = 'none';
+        chatDisabled = false;
 	});
 
 	game.on('objects initial', initialized => {
@@ -174,8 +177,6 @@ $( () => {
 		}
 
 		if(typeof objId !== 'undefined') {
-			console.log("setup follow");
-			console.log(world.objects[objId]);
 			ch.followObj(world.objects[objId]);
 		}
     });

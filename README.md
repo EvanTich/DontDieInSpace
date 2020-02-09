@@ -60,3 +60,17 @@ Made at UGAHacks 5.
     - collision checking(server-side) within 9 block square of grid
     - blast zone checker
 - references
+
+### Actual TODO
+- [ ] leaderboard
+- [ ] collision
+    - [ ] bouncing
+- [ ] set laser to not collide with parent
+- [ ] drawing death zone on client, if statements on server
+- [ ] player timers, like boost and lasers
+- [ ] asteroids spawning
+- [ ] up rotation velocity
+- [ ] cap max velocity on ships
+- [ ] make lasers faster?
+- [ ] randomize stars
+- [ ] camera border?
