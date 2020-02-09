@@ -96,7 +96,7 @@ function checkCollision() {
 
     for(objId in world.objects){
         let obj1 = world.objects[objId];
-        if(obj1.type == 3 || (obj1.type == 2 && obj1.components[2].invincible)){
+        if(obj1.type == 3 || (obj1.type == 2 && obj1.components[3].invincible)){
             continue;
         }
         for(objId2 in world.objects){
@@ -121,8 +121,8 @@ function collide(objId, objId2,){
     if(object2.type == 3){
         //laser hit something
         //push object1
+        //use bounce with laser data before deleting the laser
         updateData.removed.push(objId2);
-        
     }
     if(object2.type == 4 && object1.type == 2){
         //player crash with asteroid
@@ -135,12 +135,8 @@ function collide(objId, objId2,){
     if(object1.type == object2.type){
         //bounce
         world.objects[objId].components[1]
-        bounce(objId,objId2)
+        //do components[2] bounce stuff for both objects
     }   
-}
-
-function bounce(objId, objId2){
-    
 }
 
 exports.setup = function(io, info) {
