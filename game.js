@@ -139,12 +139,8 @@ function collide(objId, objId2,){
     if(object1.type == object2.type){
         //bounce
         world.objects[objId].components[1]
-        bounce(objId,objId2)
+        //do components[2] bounce stuff for both objects
     }   
-}
-
-function bounce(objId, objId2){
-    
 }
 
 exports.setup = function(io, info) {
