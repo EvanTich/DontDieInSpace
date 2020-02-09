@@ -128,16 +128,20 @@ $( () => {
 	game = io.connect('/game');
 
 	game.on('ready', id => {
-		objId = id;
-		// now we can follow the player
-        ch.followObj(world.objects[objId]);
+        objId = id;
+
+        // now we can follow the player
+        if(typeof world.objects[objId] !== undefined)
+            ch.followObj(world.objects[objId]);
         $('#splash')[0].style.display = 'none';
 	});
 
 	game.on('objects initial', initialized => {
 		// add the new stuff
 		for(let id in initialized) {
-			world.objects[id] = GameObject.from(initialized[id]);
+            world.objects[id] = GameObject.from(initialized[id]);
+            if(id == objId)
+                ch.followObj(world.objects[objId]);
 		}
 	});
 
