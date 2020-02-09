@@ -137,7 +137,6 @@ function collide(objId, objId2){
         if(obj2.shooterId == objId){
             return;
         }else{
-            console.log('laser collision');
             obj1.components[2].bounce(obj2.components[0].velocity, .1)
             updateData.removed.push(objId2);
         }
@@ -151,7 +150,6 @@ function collide(objId, objId2){
         updateData.removed.push(objId2);
     }
     if(obj1.type == obj2.type){
-        console.log('bounce collision');
         //bounce
         let vel1 = new Pos(obj1.components[0].velocity.x, obj1.components[0].velocity.y),
             vel2 = new Pos(world.objects[objId2].components[0].velocity.x, world.objects[objId2].components[0].velocity.y);
@@ -256,7 +254,7 @@ exports.setup = function(io, info) {
 
             if(keys.shoot && userObj.laserCooldown <= 0) {
                 // shoots from current x and y with rotation r
-                console.log(`user ${userObj.tag} shot`);
+                //console.log(`user ${userObj.tag} shot`);
                 world.objects[addObject(new Laser(userObj.x, userObj.y, userObj.r))].shooterId = objId;
                 //Id of Laser object is used to assign the shooter id with current obj that is shooting
                 userObj.laserCooldown = 1;
@@ -329,7 +327,7 @@ exports.setup = function(io, info) {
         }
         if(Object.entries(updateData.removed).length !== 0) {
             for(let id of updateData.removed) {
-                console.log(`actually deleted object ${id}`);
+                //console.log(`actually deleted object ${id}`);
                 delete world.objects[id];
             }
 
