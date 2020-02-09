@@ -138,7 +138,7 @@ function collide(objId, objId2){
             return;
         }else{
             console.log('laser collision');
-            obj1.components[2].bounce(obj2.components[0].velocity, 1)
+            obj1.components[2].bounce(obj2.components[0].velocity, .1)
             updateData.removed.push(objId2);
         }
     }
