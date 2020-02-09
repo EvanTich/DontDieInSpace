@@ -82,9 +82,9 @@ function update(dt) {
 
     laserCleanup();
     checkCollision();
-    if(asteroidSpawn < MAX_ASTEROIDS){
-        console.log("Asteroid spawned, boi");
+    if(asteroidCount < MAX_ASTEROIDS){
         asteroidSpawn();
+        asteroidCount++;
     }
     // decrement player timers
     for(let player in players) {
