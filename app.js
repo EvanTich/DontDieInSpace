@@ -62,6 +62,7 @@ const general = io.on('connection', socket => {
     console.log(`general connection by ${socket.id} created by ${socket.handshake.address}`);
     
     info[socket.id] = new PlayerInfo(socket);
+    console.log('1');
 
     socket.on('disconnect', reason => {
         delete info[socket.id];

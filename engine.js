@@ -1,12 +1,3 @@
-const typeMap = {
-    // id: {img: image path, r: radius of hitbox from the center}
-	0: {img: 'img/path.png', r: 0}, // NOTHING
-    1: {img: 'img/path.png', r: 0}, // STAR
-    2: {img: 'img/path.png', r: 0}, // PLAYER
-    3: {img: 'img/path.png', r: 0}, // PROJECTILE
-    4: {img: 'img/path.png', r: 0} // ASTEROID
-}
-
 class Pos {
 
 	// x;
@@ -74,11 +65,11 @@ class GameObject {
 	}
 	
 	get w() {
-		return this.type == -1 ? 16 : typeMap[this.type].w;
+		return 32;
 	}
 	
 	get h() {
-		return this.type == -1 ? 16 : typeMap[this.type].h;
+		return 32;
 	}
 	
 	get r() { return this._r; }
@@ -90,7 +81,7 @@ class GameObject {
 }
 
 class Component {
-    constructor(parent, update) {
+    constructor(parent, update = () => {}) {
         this.parent = parent;
         this.update = update;
     }
@@ -130,9 +121,9 @@ class Hitbox extends Component {
 	// radius
 
 	constructor(parent, radius) {
-
+        super(parent);
+        
 		this.radius = radius;
-
 	}
 }
 
@@ -141,7 +132,7 @@ class Movement extends Component {
 	vertical; // -1 to 1
 	horizontal; // -1 to 1
 
-	constructor(parent, rotation){
+	constructor(parent){
 		super(parent, (dt) => {
 			let acc = new Pos(this.vertical * Math.cos(parent.r), this.vertical * Math.sin(parent.r));
 			this.velocity.x += acc.x * dt;
@@ -181,7 +172,7 @@ class Player extends GameObject {
     constructor(x, y, r = 0, tag = '') {
 		super(x, y, 2, r, tag);
 		
-		components.push(new Movement(this, r));
+		this.components.push(new Movement(this));
 		this.components.push(new Hitbox(this, 12))
 		this.components.push(new Bounce(this, r, 1))
 		this.components.push(new Invincible(this))
@@ -193,7 +184,7 @@ class Laser extends GameObject {
     constructor(x, y, r) {
         super(x, y, 3, r);
         
-		components.push(new Projectile(this, r, 8));
+		this.components.push(new Projectile(this, r, 8));
 		this.components.push(new Hitbox(this, 2))
     }
 }
@@ -202,7 +193,7 @@ class Asteroid extends GameObject {
     constructor(x, y, r) {
         super(x, y, 4, r);
 
-		components.push(new Projectile(this, r, 1));
+		this.components.push(new Projectile(this, r, 1));
 		this.components.push(new Hitbox(this, 12))
 		this.components.push(new Bounce(this, r, 0.5))
     }
