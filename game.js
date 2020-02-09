@@ -6,6 +6,7 @@ const WORLD_SIZE = 4096; // not sure how big things are
 const TERRAIN_SMOOTHING = 32;
 const TERRAIN_EXP = 2; // mountains higher, valleys lower
 
+const MAX_ASTEROIDS = 50;
 const Engine = require("./engine.js");
 const GameObject = Engine.GameObject;
 const Player = Engine.Player;
@@ -28,6 +29,8 @@ var world = {
 
 var players = {};
 var lastId = 0;
+
+var astroidCount = 0;
 
 function noise(x, y) {
     return simplex.noise2D(x, y) / 2 + 0.5;
@@ -78,6 +81,9 @@ function update(dt) {
 
     laserCleanup();
     checkCollision();
+    if(asteroidSpawn < MAX_ASTEROIDS){
+        asteroidSpawn();
+    }
     // decrement player timers
     for(let player in players) {
         let timers = players[player];
@@ -160,6 +166,24 @@ function laserCleanup(){
         else if(!world.objects[objId].components[2].alive){
             updateData.removed.push(objId);
         }
+    }
+}
+
+function asteroidSpawn(){
+    if (Math.random() < .5){
+        let x = (WORLD_SIZE + 20) * (Math.random() < .5 ? -1 : 1);
+        let y = WORLD_SIZE * Math.random();
+        let vectorAreaX = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
+        let vectorAreaY = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
+        let rotation = Math.atan2(vectorAreaY-y, vectorAreaX-x);
+        addObject(new Asteroid(x, y, rotation));
+    } else {
+        let y = (WORLD_SIZE + 20) * (Math.random() < .5 ? -1 : 1);
+        let x = WORLD_SIZE * Math.random();
+        let vectorAreaX = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
+        let vectorAreaY = WORLD_SIZE/2 + ((Math.random() - .5) * 20);
+        let rotation = Math.atan2(vectorAreaY-y, vectorAreaX-x);
+        addObject(new Asteroid(x, y, rotation));
     }
 }
 

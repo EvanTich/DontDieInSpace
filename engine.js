@@ -217,7 +217,7 @@ class Asteroid extends GameObject {
     constructor(x, y, r) {
         super(x, y, 4, r);
 
-		this.components.push(new Projectile(this, r, 1));
+		this.components.push(new Projectile(this, r, Math.random() * 5));
 		this.components.push(new Hitbox(this, 12))
 		this.components.push(new Bounce(this, r, 0.5))
     }
