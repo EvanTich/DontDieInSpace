@@ -104,20 +104,20 @@ class Projectile extends Component {
 
 class Bounce extends Component {
 
-	collidingVelocity = new Pos(0,0);
-	mass2 = 0;
-	velocity = new Pos(0,0);
+	constructor(parent, mass1) {
+		super(parent);
+        
+        this.bounce = (collidingVelocity, mass2) => {
+            let velocity = parent.components[0].velocity;
 
-	constructor(parent, rotation, mass1) {
-		super(parent, (dt) => {
-			let phi = Math.atan((this.collidingVelocity.y - this.velocity.y) / (this.collidingVelocity.x - this.velocity.x))
-			let theta1 = Math.asin(this.velocity.y / Math.abs(this.velocity.x))
-			let theta2 = Math.asin(this.collidingVelocity.y / Math.abs(this.collidingVelocity.x))
-			let mag1 = Math.sqrt(Math.pow(this.velocity.x,2) + Math.pow(this.velocity.y,2))
-			let mag2 = Math.sqrt(Math.pow(this.collidingVelocity.x,2) + Math.pow(this.collidingVelocity.y,2))
-			parent.components[0].velocity.x = ((((mag1 * Math.cos(theta1 - phi) * (mass1 - this.mass2)) + (2 * this.mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + this.mass2)) * Math.cos(phi) + (mag1 * Math.sin(theta1 - phi) * Math.cos(phi + (Math.PI / 2))))
-			parent.components[0].velocity.y = ((((mag1 * Math.cos(theta1 - phi) * (mass1 - this.mass2)) + (2 * this.mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + this.mass2)) * Math.sin(phi) + (mag1 * Math.sin(theta1 - phi) * Math.sin(phi + (Math.PI / 2))))
-		})	
+			let phi = Math.atan((collidingVelocity.y - velocity.y) / (collidingVelocity.x - velocity.x))
+			let theta1 = Math.asin(velocity.y / Math.abs(velocity.x))
+			let theta2 = Math.asin(collidingVelocity.y / Math.abs(collidingVelocity.x))
+			let mag1 = Math.sqrt(Math.pow(velocity.x,2) + Math.pow(velocity.y,2))
+			let mag2 = Math.sqrt(Math.pow(collidingVelocity.x,2) + Math.pow(collidingVelocity.y,2))
+			velocity.x = ((((mag1 * Math.cos(theta1 - phi) * (mass1 - mass2)) + (2 * mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + mass2)) * Math.cos(phi) + (mag1 * Math.sin(theta1 - phi) * Math.cos(phi + (Math.PI / 2))))
+			velocity.y = ((((mag1 * Math.cos(theta1 - phi) * (mass1 - mass2)) + (2 * mass2 * mag2 * Math.cos(theta2 - phi))) / (mass1 + mass2)) * Math.sin(phi) + (mag1 * Math.sin(theta1 - phi) * Math.sin(phi + (Math.PI / 2))))
+        }
 	}
 }
 
@@ -196,8 +196,8 @@ class Player extends GameObject {
 		super(x, y, 2, r, tag);
 		
 		this.components.push(new Movement(this));
-		this.components.push(new Hitbox(this, 12))
-		this.components.push(new Bounce(this, r, 1))
+		this.components.push(new Hitbox(this, 6))
+		this.components.push(new Bounce(this, 1))
 		this.components.push(new Invincible(this))
     }
 }
@@ -221,7 +221,7 @@ class Asteroid extends GameObject {
 
 		this.components.push(new Projectile(this, r, Math.random() * 5));
 		this.components.push(new Hitbox(this, 12))
-		this.components.push(new Bounce(this, r, 0.5))
+		this.components.push(new Bounce(this, 4))
     }
 }
 

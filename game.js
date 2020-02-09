@@ -30,7 +30,7 @@ var world = {
 
 function sanitize(obj) {
     return {
-        pos: obj.pos,
+        pos: {x: obj.pos.x, y: obj.pos.y},
         type: obj.type,
         _r: obj._r,
         tag: obj.tag
@@ -152,17 +152,24 @@ function collide(objId, objId2){
         updateData.removed.push(objId2);
     }
     if(object1.type == object2.type){
-        console.log('player collisions');
+        console.log('bounce collisions');
         //bounce
-        if(object1.type == 2){
-            world.objects[objId].components[2].collidingVelocity.x = world.objects[objId2].components[0].velocity.x;
-            world.objects[objId].components[2].collidingVelocity.y = world.objects[objId2].components[0].velocity.y;
-            world.objects[objId2].components[2].collidingVelocity.x = world.objects[objId].components[0].velocity.x;
-            world.objects[objId2].components[2].collidingVelocity.y = world.objects[objId].components[0].velocity.y;
-            world.objects[objId].components[2].mass2 = world.objects[objId2].components[2].mass;
-            world.objects[objId2].components[2].mass2 = world.objects[objId].components[2].mass;
+        // if(object1.type == 2){
+            // world.objects[objId].components[0].velocity.x = -world.objects[objId].components[0].velocity.x;
+            // world.objects[objId].components[0].velocity.y = -world.objects[objId].components[0].velocity.y;
+
+            // world.objects[objId2].components[0].velocity.x = -world.objects[objId2].components[0].velocity.x;
+            // world.objects[objId2].components[0].velocity.y = -world.objects[objId2].components[0].velocity.y;
+            world.objects[objId].components[2].bounce(
+                world.objects[objId2].components[0].velocity,
+                world.objects[objId2].components[2].mass
+            );
+            world.objects[objId2].components[2].bounce(
+                world.objects[objId].components[0].velocity,
+                world.objects[objId].components[2].mass
+            );
         //do components[2] bounce stuff for both objects
-        }
+        // }
     }   
 }
 
