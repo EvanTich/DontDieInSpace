@@ -66,7 +66,7 @@ function keys(dt) {
 		}
     }
     
-	if(ih.state.chat && chatDisabled) {
+	if(ih.state.chat && !chatDisabled) {
 		$("#m").focus();
 	}
 
