@@ -68,6 +68,7 @@ Made at UGAHacks 5.
 - [ ] leaderboard
 - [x] collision
     - [x] bouncing
+    - [ ] fix the way it is now
 - [x] set laser to not collide with parent
 - [ ] drawing death zone on client, if statements on server
 - [x] player timers, like boost and lasers
@@ -78,3 +79,17 @@ Made at UGAHacks 5.
 - [x] randomize stars
 - [ ] camera border?
 - [ ] death screen
+- [ ] optimizations
+    - [ ] network
+    - [ ] drawing
+- [ ] client side entity updating instead of relying on server communication fully (think of source engine multiplayer)
+- [ ] make death zone very clear
+- [ ] more zoomed in / smaller map
+- [ ] make it easier to locate other players or have a coordinate system (A5, B1, etc.)
+- [ ] make lasers more noticeable
+- [ ] asteroids bigger
+- [ ] able to destroy asteroids after a couple of shots
+    - [ ] make it noticeable of how many hits it will take to destroy
+- [ ] fix project on GCP (evan only)
+- [x] fix going to chat on 't' when on splash screen
+- [ ] play on mobile
