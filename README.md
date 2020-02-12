@@ -93,3 +93,6 @@ Made at UGAHacks 5.
 - [ ] fix project on GCP (evan only)
 - [x] fix going to chat on 't' when on splash screen
 - [ ] play on mobile
+- [ ] aim and move with mouse? 
+    - [ ] distance away from mouse is speed?
+- [ ] statistics (current/max number of players, average play time, highest score)

@@ -95,27 +95,54 @@ function drawStaticObjects(g) {
             renderedObjects++;
     }
 
-    for(let i = -10; i <= 10; i++) {
-        let x = (i * world.size / 10 - ch.cx) * ch.cz,
-			y = (i * world.size / 10 - ch.cy) * ch.cz;
-		if(i == -10 || i == 10) {
-			g.strokeStyle = 'red';
-			g.lineWidth = 3;
-		} else {
-			g.strokeStyle = 'gray';
-			g.lineWidth = 1;
-		}
+    // x/2 by x/2 tile grid
+    g.fillStyle = 'white';
+    const TILES = 7;
+    for(let i = -TILES; i <= TILES; i++) {
+        // canvas pos from world pos
+        let y = (i * world.size / TILES - ch.cy) * ch.cz;
+
+        for(let j = -TILES; j <= TILES; j++) {
+            let x = (j * world.size / TILES - ch.cx) * ch.cz;
+
+            if(j == -TILES || j == TILES) {
+                g.strokeStyle = 'red';
+                g.lineWidth = 3;
+            } else {
+                g.strokeStyle = 'gray';
+                g.lineWidth = 1;
+            }
+
+            // if x is within the canvas
+            if(x >= -20 && x < ch.canvas.width) {
+                g.beginPath();
+                g.moveTo(x, 0);
+                g.lineTo(x, ch.canvas.height);
+                g.stroke();
+            }
+
+            if(i == -TILES || i == TILES) {
+                g.strokeStyle = 'red';
+                g.lineWidth = 3;
+            } else {
+                g.strokeStyle = 'gray';
+                g.lineWidth = 1;
+            }
+
+            // if y is within the canvas
+            if(y >= -10 && y < ch.canvas.height) {
+                g.beginPath();
+                g.moveTo(0, y);
+                g.lineTo(ch.canvas.width, y);
+                g.stroke();
+
+                // 65 == 'A'
+                // if both x and y are in the canvas, draw coords
+                if(x >= -20 && x < ch.canvas.width && i != TILES && j != TILES)
+                    g.fillText(`${String.fromCharCode(65 + i + TILES)} ${String.fromCharCode(65 + j + TILES)}`, x + 1, y + 10);
+            }
+        }
         
-        g.beginPath();
-        if(x >= 0 && x < ch.canvas.width) {
-            g.moveTo(x, 0);
-            g.lineTo(x, ch.canvas.height);
-        }
-        if(y >= 0 && y < ch.canvas.height) {
-            g.moveTo(0, y);
-            g.lineTo(ch.canvas.width, y);
-        }
-        g.stroke();
     }
 }
 
